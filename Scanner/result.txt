@@ -1,0 +1,38 @@
+
+TINY COMPILATION: test.cm
+	10: reserved word: void
+	10: ID, name= main
+	10: (
+	10: reserved word: void
+	10: )
+	11: {
+	12: reserved word: int
+	12: ID, name= x
+	12: ;
+	12: reserved word: int
+	12: ID, name= y
+	12: ;
+	13: ID, name= x
+	13: =
+	13: ID, name= input
+	13: (
+	13: )
+	13: ;
+	13: ID, name= y
+	13: =
+	13: ID, name= input
+	13: (
+	13: )
+	13: ;
+	14: ID, name= output
+	14: (
+	14: ID, name= gcd
+	14: (
+	14: ID, name= x
+	14: ,
+	14: ID, name= y
+	14: )
+	14: )
+	14: ;
+	15: }
+	16: EOF

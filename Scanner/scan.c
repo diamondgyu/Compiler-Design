@@ -56,9 +56,8 @@ static struct
     { char* str;
       TokenType tok;
     } reservedWords[MAXRESERVED]
-   = {{"if",IF},{"then",THEN},{"else",ELSE},{"end",END},
-      {"repeat",REPEAT},{"until",UNTIL},{"read",READ},
-      {"write",WRITE}};
+   = {{"if",IF},{"while",WHILE},{"else",ELSE},{"return",RETURN},
+      {"int",INT},{"void",VOID}};
 
 /* lookup an identifier to see if it is a reserved word */
 /* uses linear search */
@@ -76,6 +75,9 @@ static TokenType reservedLookup (char * s)
 /* function getToken returns the 
  * next token in source file
  */
+
+char previousToken = '\0';
+
 TokenType getToken(void)
 {  /* index for storing into tokenString */
    int tokenStringIndex = 0;
@@ -84,24 +86,35 @@ TokenType getToken(void)
    /* current state - always begins at START */
    StateType state = START;
    /* flag to indicate save to tokenString */
+   
    int save;
+   int c = ' ';
+
    while (state != DONE)
-   { int c = getNextChar();
+
+   {
+     if (previousToken == '\0')
+      c = getNextChar();
+     previousToken = c;
+     if (previousToken != '\0')
+      c = getNextChar();
      save = TRUE;
      switch (state)
      { case START:
+        //  if (c == ' ')
+        //    continue;
          if (isdigit(c))
            state = INNUM;
          else if (isalpha(c))
            state = INID;
-         else if (c == ':')
-           state = INASSIGN;
-         else if ((c == ' ') || (c == '\t') || (c == '\n'))
+        //  else if (c == ':')
+        //    state = INASSIGN;
+         else if ((c == ' ') || (c == '\t') || (c == '\n') || (c == '\r'))
            save = FALSE;
-         else if (c == '{')
-         { save = FALSE;
-           state = INCOMMENT;
-         }
+        //  else if (c == '*')
+        //  { save = FALSE;
+        //    state = INCOMMENT;
+        //  }
          else
          { state = DONE;
            switch (c)
@@ -109,11 +122,25 @@ TokenType getToken(void)
                save = FALSE;
                currentToken = ENDFILE;
                break;
+            //process multiple character symbols
              case '=':
-               currentToken = EQ;
-               break;
+              if (previousToken == '=')
+                currentToken = EQ;
+              else if (previousToken == '<')
+                currentToken = LE;
+              else if (previousToken == '>')
+                currentToken = GE;
+              else if (previousToken == '!')
+                currentToken = NE;
+              else // none of above
+                currentToken = ASSIGN;
+              break;
+               
              case '<':
                currentToken = LT;
+               break;
+             case '>':
+               currentToken = GT;
                break;
              case '+':
                currentToken = PLUS;
@@ -121,10 +148,26 @@ TokenType getToken(void)
              case '-':
                currentToken = MINUS;
                break;
+            // process /* (start comment)
              case '*':
+              printf("%c",c);
+              printf("%c\n",previousToken);
+              if (previousToken == '/')
+              {
+                state = INCOMMENT;
+                save = FALSE;
+              }
                currentToken = TIMES;
                break;
+            // process */ (end comment)
              case '/':
+              printf("%c",c);
+              printf("%c\n",previousToken);
+              if (previousToken == '*')
+              {
+                state = DONE;
+                save = TRUE;
+              }
                currentToken = OVER;
                break;
              case '(':
@@ -133,10 +176,26 @@ TokenType getToken(void)
              case ')':
                currentToken = RPAREN;
                break;
+             case '[':
+               currentToken = LBRACE;
+               break;
+             case ']':
+               currentToken = RBRACE;
+               break;
+             case '{':
+               currentToken = LCURLY;
+               break;
+             case '}':
+               currentToken = RCURLY;
+               break;
              case ';':
                currentToken = SEMI;
                break;
+             case ',':
+               currentToken = COMMA;
+               break;
              default:
+              //  printf(c);
                currentToken = ERROR;
                break;
            }
@@ -186,13 +245,14 @@ TokenType getToken(void)
          currentToken = ERROR;
          break;
      }
-     if ((save) && (tokenStringIndex <= MAXTOKENLEN))
+     if ((save) && (tokenStringIndex <= MAXTOKENLEN) && (c!=' ') && (c!='\t') && (c!='\n') && (c!='\r'))
        tokenString[tokenStringIndex++] = (char) c;
      if (state == DONE)
      { tokenString[tokenStringIndex] = '\0';
        if (currentToken == ID)
          currentToken = reservedLookup(tokenString);
      }
+     
    }
    if (TraceScan) {
      fprintf(listing,"\t%d: ",lineno);

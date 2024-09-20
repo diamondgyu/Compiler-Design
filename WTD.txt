@@ -1,0 +1,7 @@
+In this version:
+
+- most of the keywords are read properly, including EOF
+
+What to do:
+- need to process comments.
+- need to print 2-len operators. (use preveousToken)

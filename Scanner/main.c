@@ -46,7 +46,9 @@ int TraceCode = FALSE;
 int Error = FALSE;
 
 main( int argc, char * argv[] )
-{ TreeNode * syntaxTree;
+{
+// FILE* file = fopen("result.txt", "w");
+   TreeNode * syntaxTree;
   char pgm[120]; /* source code file name */
   if (argc != 2)
     { fprintf(stderr,"usage: %s <filename>\n",argv[0]);
@@ -60,7 +62,7 @@ main( int argc, char * argv[] )
   { fprintf(stderr,"File %s not found\n",pgm);
     exit(1);
   }
-  listing = stdout; /* send listing to screen */
+  listing = fopen("result.txt", "w");//stdout; /* send listing to screen */
   fprintf(listing,"\nTINY COMPILATION: %s\n",pgm);
 #if NO_PARSE
   while (getToken()!=ENDFILE);
