@@ -103,35 +103,35 @@ TokenType getToken(void)
          if (c == '/')
          {
            if (getNextChar() == '*')
-           { state = INCOMMENT; save = FALSE;}
+           { state = INCOMMENT; save = FALSE; break;}
            else ungetNextChar();
          }
          else if (c == '=')
          {
            if (getNextChar() == '=')
-           { state = INEQ; currentToken=EQ;}
+           { state = INEQ; currentToken=EQ; break;}
            else ungetNextChar();
          }
          else if (c == '<')
          {
            if(getNextChar() == '=')
-           { state = INLT; currentToken=LE;}
+           { state = INLT; currentToken=LE; break; fprintf(listing, "LE\n");}
            else ungetNextChar();
          }
          else if (c == '>')
          {
            if(getNextChar() == '=')
-           { state = INGT; currentToken=GE;}
+           { state = INGT; currentToken=GE; break; fprintf(listing, "GE\n");}
            else ungetNextChar();
          }
          else if (c == '!')
          {
            if(getNextChar() == '=')
-           { state = INNE; currentToken=NE;}
+           { state = INNE; currentToken=NE; break; fprintf(listing, "NE\n");}
            else ungetNextChar();
          }
 
-         else if (isdigit(c))
+         if (isdigit(c))
            state = INNUM;
          else if (isalpha(c))
            state = INID;
@@ -249,12 +249,12 @@ TokenType getToken(void)
        case INLT:
          save = TRUE;
          state = DONE;
-         currentToken = LT;
+         currentToken = LE;
          break;
        case INGT:
          save = TRUE;
          state = DONE;
-         currentToken = GT;
+         currentToken = GE;
          break;
        case INNE:
          save = TRUE;
