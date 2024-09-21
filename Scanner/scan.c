@@ -11,7 +11,7 @@
 
 /* states in scanner DFA */
 typedef enum
-   { START,INASSIGN,INCOMMENT,INNUM,INID,DONE }
+   { START, INASSIGN, INCOMMENT, INNUM, INID, INEQ, INLT, INGT, INNE, INOVER, DONE }
    StateType;
 
 /* lexeme of identifier or reserved word */
@@ -76,7 +76,7 @@ static TokenType reservedLookup (char * s)
  * next token in source file
  */
 
-char previousToken = '\0';
+// char previousToken = '\0';
 
 TokenType getToken(void)
 {  /* index for storing into tokenString */
@@ -88,35 +88,58 @@ TokenType getToken(void)
    /* flag to indicate save to tokenString */
    
    int save;
-   int c = ' ';
+   int c;
 
    while (state != DONE)
 
    {
-     if (previousToken == '\0')
-      c = getNextChar();
-     previousToken = c;
-     if (previousToken != '\0')
-      c = getNextChar();
+     
+    c = getNextChar();
+    // fprintf(listing, "%c\n",c);
      save = TRUE;
      switch (state)
      { case START:
-        //  if (c == ' ')
-        //    continue;
-         if (isdigit(c))
+
+         if (c == '/')
+         {
+           if (getNextChar() == '*')
+           { state = INCOMMENT; save = FALSE;}
+           else ungetNextChar();
+         }
+         else if (c == '=')
+         {
+           if (getNextChar() == '=')
+           { state = INEQ; currentToken=EQ;}
+           else ungetNextChar();
+         }
+         else if (c == '<')
+         {
+           if(getNextChar() == '=')
+           { state = INLT; currentToken=LE;}
+           else ungetNextChar();
+         }
+         else if (c == '>')
+         {
+           if(getNextChar() == '=')
+           { state = INGT; currentToken=GE;}
+           else ungetNextChar();
+         }
+         else if (c == '!')
+         {
+           if(getNextChar() == '=')
+           { state = INNE; currentToken=NE;}
+           else ungetNextChar();
+         }
+
+         else if (isdigit(c))
            state = INNUM;
          else if (isalpha(c))
            state = INID;
-        //  else if (c == ':')
-        //    state = INASSIGN;
          else if ((c == ' ') || (c == '\t') || (c == '\n') || (c == '\r'))
            save = FALSE;
-        //  else if (c == '*')
-        //  { save = FALSE;
-        //    state = INCOMMENT;
-        //  }
          else
-         { state = DONE;
+         { 
+           state = DONE;
            switch (c)
            { case EOF:
                save = FALSE;
@@ -124,15 +147,6 @@ TokenType getToken(void)
                break;
             //process multiple character symbols
              case '=':
-              if (previousToken == '=')
-                currentToken = EQ;
-              else if (previousToken == '<')
-                currentToken = LE;
-              else if (previousToken == '>')
-                currentToken = GE;
-              else if (previousToken == '!')
-                currentToken = NE;
-              else // none of above
                 currentToken = ASSIGN;
               break;
                
@@ -148,26 +162,10 @@ TokenType getToken(void)
              case '-':
                currentToken = MINUS;
                break;
-            // process /* (start comment)
              case '*':
-              printf("%c",c);
-              printf("%c\n",previousToken);
-              if (previousToken == '/')
-              {
-                state = INCOMMENT;
-                save = FALSE;
-              }
                currentToken = TIMES;
                break;
-            // process */ (end comment)
              case '/':
-              printf("%c",c);
-              printf("%c\n",previousToken);
-              if (previousToken == '*')
-              {
-                state = DONE;
-                save = TRUE;
-              }
                currentToken = OVER;
                break;
              case '(':
@@ -195,7 +193,6 @@ TokenType getToken(void)
                currentToken = COMMA;
                break;
              default:
-              //  printf(c);
                currentToken = ERROR;
                break;
            }
@@ -207,7 +204,12 @@ TokenType getToken(void)
          { state = DONE;
            currentToken = ENDFILE;
          }
-         else if (c == '}') state = START;
+         if (c == '*')
+           if (getNextChar() == '/')
+           { 
+            state = START;
+            // ungetNextChar();
+           }
          break;
        case INASSIGN:
          state = DONE;
@@ -238,6 +240,28 @@ TokenType getToken(void)
            currentToken = ID;
          }
          break;
+
+       case INEQ:
+         save = TRUE;
+         state = DONE;
+         currentToken = EQ;
+         break;
+       case INLT:
+         save = TRUE;
+         state = DONE;
+         currentToken = LT;
+         break;
+       case INGT:
+         save = TRUE;
+         state = DONE;
+         currentToken = GT;
+         break;
+       case INNE:
+         save = TRUE;
+         state = DONE;
+         currentToken = NE;
+         break;
+
        case DONE:
        default: /* should never happen */
          fprintf(listing,"Scanner Bug: state= %d\n",state);
@@ -256,6 +280,7 @@ TokenType getToken(void)
    }
    if (TraceScan) {
      fprintf(listing,"\t%d: ",lineno);
+    //  printf("%s\n",tokenString);
      printToken(currentToken,tokenString);
    }
    return currentToken;

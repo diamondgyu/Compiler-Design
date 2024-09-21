@@ -43,6 +43,7 @@ void printToken( TokenType token, const char* tokenString )
     case SEMI: fprintf(listing,";\n"); break;
     case COMMA: fprintf(listing,",\n"); break;
     case '\0': fprintf(listing,"EOF\n"); break;
+    case NUM:
       fprintf(listing,
           "NUM, val= %s\n",tokenString);
       break;

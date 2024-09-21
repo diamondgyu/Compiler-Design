@@ -1,0 +1,6 @@
+/* int v = 0; */
+
+int main()
+{
+    return 30;
+}
