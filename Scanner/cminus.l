@@ -1,6 +1,6 @@
 /****************************************************/
-/* File: tiny.l                                     */
-/* Lex specification for TINY                       */
+/* File: cminus                                     */
+/* Lex specification for C-MINUS                    */
 /* Compiler Construction: Principles and Practice   */
 /* Kenneth C. Louden                                */
 /****************************************************/
@@ -19,33 +19,44 @@ letter      [a-zA-Z]
 identifier  {letter}+
 newline     \n
 whitespace  [ \t]+
+%x COMMENT
 
 %%
 
 "if"            {return IF;}
 "else"          {return ELSE;}
-":="            {return ASSIGN;}
-"="             {return EQ;}
+"while"         {return WHILE;}
+"return"        {return RETURN;}
+"int"           {return INT;}
+"void"          {return VOID;}
+"="             {return ASSIGN;}
+"=="            {return EQ;}
+"!="            {return NE;}
 "<"             {return LT;}
+"<="            {return LE;}
+">"             {return GT;}
+">="            {return GE;}
 "+"             {return PLUS;}
 "-"             {return MINUS;}
 "*"             {return TIMES;}
 "/"             {return OVER;}
 "("             {return LPAREN;}
 ")"             {return RPAREN;}
+"["             {return LBRACE;}
+"]"             {return RBRACE;}
+"{"             {return LCURLY;}
+"}"             {return RCURLY;}
 ";"             {return SEMI;}
+","             {return COMMA;}
 {number}        {return NUM;}
 {identifier}    {return ID;}
 {newline}       {lineno++;}
 {whitespace}    {/* skip whitespace */}
-"{"             { char c;
-                  do
-                  { c = input();
-                    if (c == EOF) break;
-                    if (c == '\n') lineno++;
-                  } while (c != '}');
-                }
-.               {return ERROR;}
+"/*"            { BEGIN(COMMENT); }
+<COMMENT>"*/"   { BEGIN(INITIAL); }
+<COMMENT>.      { /* ignore comments */ }
+<COMMENT>\n     {lineno++;}
+
 
 %%
 

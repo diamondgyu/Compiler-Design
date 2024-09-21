@@ -1,6 +1,7 @@
 In this version:
 
-- most of the keywords are read properly, including EOF
+- C version is finished
+- Can't start with proper line number - why? - because of no lineno++ in comments
 
 What to do:
-- last letter of 2-letter operator sticks to the next symbol
+- in LEX, newlines are inserted in the result file

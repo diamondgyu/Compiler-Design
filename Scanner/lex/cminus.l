@@ -21,19 +21,33 @@ newline     \n
 whitespace  [ \t]+
 
 %%
-
+ASSIGN,EQ,NE,LT, LE, GT, GE,PLUS,MINUS,TIMES,OVER,LPAREN,RPAREN,LBRACE, RBRACE, LCURLY, RCURLY, SEMI, COMMA
 "if"            {return IF;}
+"then"          {return THEN;}
 "else"          {return ELSE;}
+"while"         {return WHILE;}
+"return"        {return RETURN;}
+"int"           {return INT;}
+"void"          {return VOID;}
 ":="            {return ASSIGN;}
 "="             {return EQ;}
+"!="            {return NE;}
 "<"             {return LT;}
+"<="            {return LE;}
+">"             {return GT;}
+">="            {return GE;}
 "+"             {return PLUS;}
 "-"             {return MINUS;}
 "*"             {return TIMES;}
 "/"             {return OVER;}
 "("             {return LPAREN;}
 ")"             {return RPAREN;}
+"["             {return LBRACE;}
+"]"             {return RBRACE;}
+"{"             {return LCURLY;}
+"}"             {return RCURLY;}
 ";"             {return SEMI;}
+","             {return COMMA;}
 {number}        {return NUM;}
 {identifier}    {return ID;}
 {newline}       {lineno++;}
