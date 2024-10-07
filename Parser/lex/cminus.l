@@ -1,6 +1,6 @@
 /****************************************************/
-/* File: cminus                                     */
-/* Lex specification for C-MINUS                    */
+/* File: tiny.l                                     */
+/* Lex specification for TINY                       */
 /* Compiler Construction: Principles and Practice   */
 /* Kenneth C. Louden                                */
 /****************************************************/
@@ -19,18 +19,18 @@ letter      [a-zA-Z]
 identifier  {letter}+
 newline     \n
 whitespace  [ \t]+
-%x COMMENT
 
 %%
-
+ASSIGN,EQ,NE,LT, LE, GT, GE,PLUS,MINUS,TIMES,OVER,LPAREN,RPAREN,LBRACE, RBRACE, LCURLY, RCURLY, SEMI, COMMA
 "if"            {return IF;}
+"then"          {return THEN;}
 "else"          {return ELSE;}
 "while"         {return WHILE;}
 "return"        {return RETURN;}
 "int"           {return INT;}
 "void"          {return VOID;}
-"="             {return ASSIGN;}
-"=="            {return EQ;}
+":="            {return ASSIGN;}
+"="             {return EQ;}
 "!="            {return NE;}
 "<"             {return LT;}
 "<="            {return LE;}
@@ -52,11 +52,14 @@ whitespace  [ \t]+
 {identifier}    {return ID;}
 {newline}       {lineno++;}
 {whitespace}    {/* skip whitespace */}
-"/*"            { BEGIN(COMMENT); }
-<COMMENT>"*/"   { BEGIN(INITIAL); }
-<COMMENT>.      { /* ignore comments */ }
-<COMMENT>\n     {lineno++;}
-.               {}
+"{"             { char c;
+                  do
+                  { c = input();
+                    if (c == EOF) break;
+                    if (c == '\n') lineno++;
+                  } while (c != '}');
+                }
+.               {return ERROR;}
 
 %%
 
