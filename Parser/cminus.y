@@ -26,7 +26,7 @@ static int yylex(void); // added 11/2/11 to ensure no conflict with lex
     
    
 
-%token IF, ELSE, WHILE, RETURN, INT, VOID
+%token IF, ELSE, WHILE, RETURN, INT, VOID, INTARRAY, VOIDARRAY
 %token NUM ID
 %token ENDFILE, ERROR
 
@@ -38,38 +38,60 @@ static int yylex(void); // added 11/2/11 to ensure no conflict with lex
 
 // Grammar rules
 %%
-program: declaration_list { $$ = $1; };
+// nonterminals: 
+program: declaration_list { savedTree = $1; };
 
-declaration_list: declaration_list declaration { $$ = $1; }
-                | declaration { $$ = $1; };
+declaration_list: declaration_list declaration
+                  { 
+                    YYSTYPE t = $1;
+                    if (t != NULL)
+                    { 
+                         while (t->sibling != NULL)
+                         t = t->sibling;
+                         t->sibling = $2;
+                         $$ = $1; 
+                    }
+                     else $$ = $2;
+                  }
+                | declaration { 
+                    $$ = $1; 
+                  };
 
 declaration: var_declaration { $$ = $1; }
-           | fun_declaration { $$ = $1; };
+           /* | func_declaration { $$ = $1; }; */
 
-var_declaration: type_specifier ID ';' { $$ = $2; }
-               | type_specifier ID '[' NUM ']' ';' { $$ = $2; };
+var_declaration: type_specifier ID SEMI { $$ = $2; }
+               | type_specifier ID LBRACE NUM RBRACE SEMI { $$ = $2; };
+
+/* func_declaration: type_specifier ID LPAREN params RPAREN compound_stmt { $$ = $2; }; */
 
 type_specifier: INT { $$ = $1; }
               | VOID { $$ = $1; };
+              | INTARRAY { $$ = $1; };
+              | VOIDARRAY { $$ = $1; };
 
-fun_declaration: type_specifier ID '(' params ')' compound_stmt { $$ = $2; };
+
+/* 
+
+
+
 
 params: param_list { $$ = $1; }
       | VOID { $$ = 0; };
 
-param_list: param_list ',' param { $$ = $1; }
+param_list: param_list COMMA param { $$ = $1; }
           | param { $$ = $1; };
 
 param: type_specifier ID { $$ = $2; }
-     | type_specifier ID '[' ']' { $$ = $2; };
+     | type_specifier ID LBRACE RBRACE { $$ = $2; };
 
-compound_stmt: '{' local_declarations statement_list '}' { $$ = $2; };
+compound_stmt: LCURLY local_declarations statement_list RCURLY { $$ = $2; };
 
 local_declarations: local_declarations var_declaration { $$ = $1; }
-                  | /* empty */ { $$ = 0; };
+                  |  { $$ = 0; };
 
 statement_list: statement_list statement { $$ = $1; }
-              | /* empty */ { $$ = 0; };
+              |  { $$ = 0; };
 
 statement: expression_stmt { $$ = $1; }
          | compound_stmt { $$ = $1; }
@@ -77,57 +99,62 @@ statement: expression_stmt { $$ = $1; }
          | iteration_stmt { $$ = $1; }
          | return_stmt { $$ = $1; };
 
-expression_stmt: expression ';' { $$ = $1; }
-               | ';' { $$ = 0; };
+expression_stmt: expression SEMI { $$ = $1; }
+               | SEMI { $$ = 0; };
 
-selection_stmt: IF '(' expression ')' statement { $$ = $3; }
-              | IF '(' expression ')' statement ELSE statement { $$ = $3; };
+selection_stmt: IF LPAREN expression RPAREN statement { $$ = $3; }
+              | IF LPAREN expression RPAREN statement ELSE statement { $$ = $3; };
 
-iteration_stmt: WHILE '(' expression ')' statement { $$ = $3; };
+iteration_stmt: WHILE LPAREN expression RPAREN statement { $$ = $3; };
 
-return_stmt: RETURN ';' { $$ = 0; }
-           | RETURN expression ';' { $$ = $2; };
+return_stmt: RETURN SEMI { $$ = 0; }
+           | RETURN expression SEMI { $$ = $2; };
 
-expression: var '=' expression { $$ = $3; }
+expression: var EQ expression { $$ = $3; }
           | simple_expression { $$ = $1; };
 
 var: ID { $$ = $1; }
-   | ID '[' expression ']' { $$ = $3; };
+   | ID LBRACE expression RBRACE { $$ = $3; };
 
 simple_expression: additive_expression relop additive_expression { $$ = $1; }
                  | additive_expression { $$ = $1; };
 
-relop: LE { $$ = $1; } 
-     | '<' { $$ = '<'; } 
-     | '>' { $$ = '>'; } 
+relop: LE { $$ = LE; } 
+     | LT { $$ = LT; } 
+     | GT { $$ = GT; } 
      | GE { $$ = GE; } 
      | EQ { $$ = EQ; } 
      | NE { $$ = NE; };
 
-additive_expression: additive_expression addop term { $$ = $1 + $3; }
+additive_expression: additive_expression addop term { 
+                         $$ = newExpNode(OpK); 
+                         $$ -> child[0] = $1
+                         $$ -> child[1] = $3
+                         $$ -> attr.op = addop
+                    }
                    | term { $$ = $1; };
 
-addop: '+' { $$ = '+'; }
-     | '-' { $$ = '-'; };
+addop: PLUS { $$ = PLUS; }
+     | MINUS { $$ = MINUS; };
 
 term: term mulop factor { $$ = $1 * $3; }
     | factor { $$ = $1; };
 
-mulop: '*' { $$ = '*'; }
-     | '/' { $$ = '/'; };
+mulop: TIMES { $$ = TIMES; }
+     | OVER { $$ = OVER; };
 
-factor: '(' expression ')' { $$ = $2; }
+factor: LPAREN expression RPAREN { $$ = $2; }
       | var { $$ = $1; }
       | call { $$ = $1; }
       | NUM { $$ = atoi(yytext); }; // Assuming NUM is a string of digits
 
-call: ID '(' args ')' { /* function call logic */ };
+call: ID LPAREN args RPAREN { };
 
-args: arg_list { /* argument list logic */ }
-    | /* empty */;
+args: arg_list {  }
+    | ;
 
-arg_list: arg_list ',' expression { /* list logic */ }
-        | expression;
+arg_list: arg_list COMMA expression { }
+        | expression; */
 
 %%
 
