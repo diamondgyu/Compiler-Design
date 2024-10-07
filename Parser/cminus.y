@@ -60,7 +60,9 @@ declaration_list: declaration_list declaration
 declaration: var_declaration { $$ = $1; }
            /* | func_declaration { $$ = $1; }; */
 
-var_declaration: type_specifier ID SEMI { $$ = $2; }
+var_declaration: type_specifier ID SEMI { 
+                    $$ = newStmtNode()
+                 }
                | type_specifier ID LBRACE NUM RBRACE SEMI { $$ = $2; };
 
 /* func_declaration: type_specifier ID LPAREN params RPAREN compound_stmt { $$ = $2; }; */
