@@ -6,7 +6,7 @@
 
 CC = gcc
 
-CFLAGS = -W -Wall
+CFLAGS = -W -Wall -w
 
 OBJS = main.o util.o lex.yy.o y.tab.o
 

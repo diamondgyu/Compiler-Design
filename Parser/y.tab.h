@@ -66,25 +66,25 @@ extern int yydebug;
     ID = 267,                      /* ID  */
     ENDFILE = 268,                 /* ENDFILE  */
     ERROR = 269,                   /* ERROR  */
-    ASSIGN = 270,                  /* ASSIGN  */
-    EQ = 271,                      /* EQ  */
-    NE = 272,                      /* NE  */
-    LT = 273,                      /* LT  */
-    LE = 274,                      /* LE  */
-    GT = 275,                      /* GT  */
-    GE = 276,                      /* GE  */
-    LPAREN = 277,                  /* LPAREN  */
-    RPAREN = 278,                  /* RPAREN  */
-    LBRACE = 279,                  /* LBRACE  */
-    RBRACE = 280,                  /* RBRACE  */
-    LCURLY = 281,                  /* LCURLY  */
-    RCURLY = 282,                  /* RCURLY  */
-    SEMI = 283,                    /* SEMI  */
-    COMMA = 284,                   /* COMMA  */
-    PLUS = 285,                    /* PLUS  */
-    MINUS = 286,                   /* MINUS  */
-    TIMES = 287,                   /* TIMES  */
-    OVER = 288                     /* OVER  */
+    EQ = 270,                      /* EQ  */
+    NE = 271,                      /* NE  */
+    LT = 272,                      /* LT  */
+    LE = 273,                      /* LE  */
+    GT = 274,                      /* GT  */
+    GE = 275,                      /* GE  */
+    LPAREN = 276,                  /* LPAREN  */
+    RPAREN = 277,                  /* RPAREN  */
+    LBRACE = 278,                  /* LBRACE  */
+    RBRACE = 279,                  /* RBRACE  */
+    LCURLY = 280,                  /* LCURLY  */
+    RCURLY = 281,                  /* RCURLY  */
+    SEMI = 282,                    /* SEMI  */
+    COMMA = 283,                   /* COMMA  */
+    PLUS = 284,                    /* PLUS  */
+    MINUS = 285,                   /* MINUS  */
+    TIMES = 286,                   /* TIMES  */
+    OVER = 287,                    /* OVER  */
+    ASSIGN = 288                   /* ASSIGN  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -105,25 +105,25 @@ extern int yydebug;
 #define ID 267
 #define ENDFILE 268
 #define ERROR 269
-#define ASSIGN 270
-#define EQ 271
-#define NE 272
-#define LT 273
-#define LE 274
-#define GT 275
-#define GE 276
-#define LPAREN 277
-#define RPAREN 278
-#define LBRACE 279
-#define RBRACE 280
-#define LCURLY 281
-#define RCURLY 282
-#define SEMI 283
-#define COMMA 284
-#define PLUS 285
-#define MINUS 286
-#define TIMES 287
-#define OVER 288
+#define EQ 270
+#define NE 271
+#define LT 272
+#define LE 273
+#define GT 274
+#define GE 275
+#define LPAREN 276
+#define RPAREN 277
+#define LBRACE 278
+#define RBRACE 279
+#define LCURLY 280
+#define RCURLY 281
+#define SEMI 282
+#define COMMA 283
+#define PLUS 284
+#define MINUS 285
+#define TIMES 286
+#define OVER 287
+#define ASSIGN 288
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED

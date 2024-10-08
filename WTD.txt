@@ -3,5 +3,8 @@ In this version:
 - C version is finished
 - Can't start with proper line number - why? - because of no lineno++ in comments
 
+- Function 이름 표시 수정
+- 
+
 What to do:
-- in LEX, newlines are inserted in the result file
+- 반복문, 조건문 투입

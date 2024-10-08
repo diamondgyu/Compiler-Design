@@ -16,12 +16,14 @@ void printToken( TokenType, const char* );
 /* Function newStmtNode creates a new statement
  * node for syntax tree construction
  */
-TreeNode * newStmtNode(StmtKind);
+TreeNode * newStmtNode(StmtType);
 
 /* Function newExpNode creates a new expression 
  * node for syntax tree construction
  */
-TreeNode * newExpNode(ExpKind);
+TreeNode * newExprNode(ExprType);
+
+TreeNode * newDecNode(DecType);
 
 /* Function copyString allocates and makes a new
  * copy of an existing string

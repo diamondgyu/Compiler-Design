@@ -63,10 +63,8 @@ TreeNode * statement(void)
 { TreeNode * t = NULL;
   switch (token) {
     case IF : t = if_stmt(); break;
-    case REPEAT : t = repeat_stmt(); break;
+    case WHILE : t = repeat_stmt(); break;
     case ID : t = assign_stmt(); break;
-    case READ : t = read_stmt(); break;
-    case WRITE : t = write_stmt(); break;
     default : syntaxError("unexpected token -> ");
               printToken(token,tokenString);
               token = getToken();
@@ -76,16 +74,15 @@ TreeNode * statement(void)
 }
 
 TreeNode * if_stmt(void)
-{ TreeNode * t = newStmtNode(IfK);
+{ TreeNode * t = newStmtNode(SelectionStmt);
   match(IF);
   if (t!=NULL) t->child[0] = exp();
-  match(THEN);
+  match(ELSE);
   if (t!=NULL) t->child[1] = stmt_sequence();
   if (token==ELSE) {
     match(ELSE);
     if (t!=NULL) t->child[2] = stmt_sequence();
   }
-  match(END);
   return t;
 }
 
@@ -101,25 +98,9 @@ TreeNode * repeat_stmt(void)
 TreeNode * assign_stmt(void)
 { TreeNode * t = newStmtNode(AssignK);
   if ((t!=NULL) && (token==ID))
-    t->attr.name = copyString(tokenString);
+    t->name = copyString(tokenString);
   match(ID);
   match(ASSIGN);
-  if (t!=NULL) t->child[0] = exp();
-  return t;
-}
-
-TreeNode * read_stmt(void)
-{ TreeNode * t = newStmtNode(ReadK);
-  match(READ);
-  if ((t!=NULL) && (token==ID))
-    t->attr.name = copyString(tokenString);
-  match(ID);
-  return t;
-}
-
-TreeNode * write_stmt(void)
-{ TreeNode * t = newStmtNode(WriteK);
-  match(WRITE);
   if (t!=NULL) t->child[0] = exp();
   return t;
 }
@@ -127,10 +108,10 @@ TreeNode * write_stmt(void)
 TreeNode * exp(void)
 { TreeNode * t = simple_exp();
   if ((token==LT)||(token==EQ)) {
-    TreeNode * p = newExpNode(OpK);
+    TreeNode * p = newExpNode(OpExpr);
     if (p!=NULL) {
       p->child[0] = t;
-      p->attr.op = token;
+      p->op = token;
       t = p;
     }
     match(token);
@@ -143,10 +124,10 @@ TreeNode * exp(void)
 TreeNode * simple_exp(void)
 { TreeNode * t = term();
   while ((token==PLUS)||(token==MINUS))
-  { TreeNode * p = newExpNode(OpK);
+  { TreeNode * p = newExpNode(OpExpr);
     if (p!=NULL) {
       p->child[0] = t;
-      p->attr.op = token;
+      p->op = token;
       t = p;
       match(token);
       t->child[1] = term();
@@ -158,10 +139,10 @@ TreeNode * simple_exp(void)
 TreeNode * term(void)
 { TreeNode * t = factor();
   while ((token==TIMES)||(token==OVER))
-  { TreeNode * p = newExpNode(OpK);
+  { TreeNode * p = newExpNode(OpExpr);
     if (p!=NULL) {
       p->child[0] = t;
-      p->attr.op = token;
+      p->op = token;
       t = p;
       match(token);
       p->child[1] = factor();
@@ -174,15 +155,15 @@ TreeNode * factor(void)
 { TreeNode * t = NULL;
   switch (token) {
     case NUM :
-      t = newExpNode(ConstK);
+      t = newExpNode(ConstExpr);
       if ((t!=NULL) && (token==NUM))
-        t->attr.val = atoi(tokenString);
+        t->val = atoi(tokenString);
       match(NUM);
       break;
     case ID :
-      t = newExpNode(IdK);
+      t = newExpNode(IdExpr);
       if ((t!=NULL) && (token==ID))
-        t->attr.name = copyString(tokenString);
+        t->name = copyString(tokenString);
       match(ID);
       break;
     case LPAREN :
