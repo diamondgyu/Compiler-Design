@@ -284,15 +284,16 @@ selection_stmt: IF LPAREN expression RPAREN statement { $$ = $3; }
 
 iteration_stmt: WHILE LPAREN expression RPAREN statement { $$ = $3; };
 
-
-
-
+call: ID LPAREN args RPAREN { };
 
 args: arg_list {  }
     | ;
 
 arg_list: arg_list COMMA expression { }
-        | expression; */
+        | expression; 
+        
+
+*/
 
 %%
 
