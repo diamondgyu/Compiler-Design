@@ -263,18 +263,16 @@ void printTree( TreeNode * tree )
           fprintf(listing,"While Statement:\n");
           break;
         case ReturnStmt:
+          if (tree->type == Void){ fprintf(listing,"Void Return\n"); break;}
           fprintf(listing,"Return Statement:\n");
           break; 
-      //   default:
-      //     fprintf(listing,"Unknown ExpNode kind\n");
-      //     break;
+        default:
+          fprintf(listing,"Unknown ExpNode kind\n");
+          break;
       }
     }
     else if (tree->node_type==Expr)
     { 
-      // printf("hello\n"); 
-       printf("%s\n",getExprType(tree->expr_type));
-      //  printf("%s\n",tree->name);
      switch (tree->expr_type) {
         case OpExpr:
           fprintf(listing,"Op: ");
@@ -301,7 +299,6 @@ void printTree( TreeNode * tree )
     }
     else if (tree->node_type==Dec)
     {
-      printf("%s\n", getDecType(tree->dec_type));
   
       switch(tree->dec_type)
       {

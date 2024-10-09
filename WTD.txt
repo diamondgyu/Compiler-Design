@@ -5,11 +5,8 @@ In this version (Parsing):
 - Parameter type 오류 해결 (type을 cminus.y에서 명시적으로 지정)
 - bison -Wcex cminus.y 명령어를 통해 conflict 파악 후 제거
 - If-Else 와 Param에서 conflict 해결
-- 반복문 투입
 - no parameter vs parameter 확인
 - x[i] = 3 형태의 assign 혹은 식 구문 인식 오류 해결(쪼개기 방법으로)
 
 What to do:
-- return none vs return something 확인
 - lineno 확인
--기타 warning 확인

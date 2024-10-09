@@ -21,6 +21,7 @@ static TreeNode * savedTree; /* stores syntax tree for later return */
 static int savedNum;
 static int savedOp;
 static int yylex(void); // added 11/2/11 to ensure no conflict with lex
+static int yyerror(char* s);
 
 %}
 
@@ -70,32 +71,29 @@ declaration: var_declaration { $$ = $1; }
 
 id : ID{ 
        savedName = copyString(tokenString);
-      // printf("%s\n", savedName);
        savedLineNo = lineno;
      };
 
 num : NUM{ 
-    savedNum = atoi(tokenString);
+    savedNum = atoi(copyString(tokenString));
     savedLineNo = lineno;
     $$ = newExprNode(ConstExpr);
     $$->lineno=lineno;
-    $$->val=atoi(tokenString);
+    $$->val=atoi(copyString(tokenString));
   };
 
 var_declaration: type_specifier id SEMI {
-                    printf("normal var dec\n");
                     $$ = newDecNode(VarDec);
                     $$->lineno=lineno;
-                    $$->name=savedName;
+                    $$->name=copyString(savedName);
                     $$->type=savedType;
                  };
                | type_specifier id LBRACE num RBRACE SEMI { 
-                printf("arr var dec\n");
                     $$ = newDecNode(ArrDec);
                     $$->child[0] = $1;
                     $$->child[1] = $4;
                     $$->lineno=lineno;
-                    $$->name=savedName;
+                    $$->name=copyString(savedName);
                     if (savedType == Integer)
                       $$->type=IntegerArray;
                     else
@@ -103,14 +101,12 @@ var_declaration: type_specifier id SEMI {
                  };
 
 type_specifier: INT { savedType=Integer; };
-              | VOID { printf("void\n");savedType=Void; };
-              | INTARRAY { printf("int[]\n");savedType=IntegerArray; };
-              | VOIDARRAY { savedType=VoidArray; };
+              | VOID { savedType=Void; };
 
 func_declaration : type_specifier id {
                    $$ = newDecNode(FuncDec);
                    $$->lineno = lineno;
-                   $$->name = savedName;
+                   $$->name = copyString(savedName);
                    $$->type = savedType;
                  }
                  LPAREN params RPAREN compound_stmt
@@ -121,13 +117,12 @@ func_declaration : type_specifier id {
                  };
 
 // about functions
-params: param_list { $$ = $1; printf("params\n");}
-      | VOID { printf("no params\n");$$ = newDecNode(ParamDec);
+params: param_list { $$ = $1; }
+      | VOID { $$ = newDecNode(ParamDec);
            $$->type = Void;
          };
 
 param_list: param_list COMMA param { 
-              printf("param list\n");
               YYSTYPE t = $1;
               if (t != NULL) {
                 while (t->sibling != NULL) { t = t->sibling; }
@@ -140,14 +135,12 @@ param_list: param_list COMMA param {
           | param { $$ = $1; } %prec PARAMONLY;
 
 param : type_specifier id { 
-          printf("normal param\n");
           $$ = newDecNode(ParamDec);
           $$->child[0] = $1;
           $$->type=savedType;
           $$->name = copyString(savedName);
         }
       | type_specifier id LBRACE RBRACE { 
-          printf("array param\n");
           $$ = newDecNode(ArrParamDec);
           $$->child[0] = $1;
           if (savedType == Integer)
@@ -158,7 +151,6 @@ param : type_specifier id {
         };
 
 compound_stmt: LCURLY local_declarations statement_list RCURLY { 
-          printf("compound_stmt\n");
           $$ = newStmtNode(CompoundStmt);
           $$->child[0] = $2;
           $$->child[1] = $3;
@@ -205,21 +197,21 @@ return_stmt: RETURN SEMI {
             }
            | RETURN expression SEMI { 
              $$ = newStmtNode(ReturnStmt);
+             $$->type = Integer;
              $$->child[0] = $2;
             };
 
 expression: var ASSIGN expression { 
-  printf("assign expression\n");
             $$ = newExprNode(AssignExpr);
             $$->child[0] = $1;
             $$->child[1] = $3;
           }
           | simple_expression { $$ = $1; };
 
-var: id { $$ = newExprNode(IdExpr); $$->name=savedName;}
+var: id { $$ = newExprNode(IdExpr); $$->name=copyString(savedName);}
    | id LBRACE {
       $$ = newExprNode(IdExpr);
-      $$->name=savedName; 
+      $$->name=copyString(savedName); 
     }
     expression RBRACE { 
       $$ = $3;
@@ -276,13 +268,12 @@ factor: LPAREN expression RPAREN { $$ = $2; }
       | num { 
            $$ = newExprNode(ConstExpr);
            $$->type = Integer;
-           $$->val = atoi(tokenString);
+           $$->val = atoi(copyString(tokenString));
          };
 
 // Function Calls
 call: id {
   $$ = newExprNode(CallExpr);
-  // printf("\n\n%s\n\n\n", savedName);
   $$->name = copyString(savedName);
 } LPAREN args RPAREN { 
   $$ = $2;
