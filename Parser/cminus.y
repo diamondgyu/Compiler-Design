@@ -30,25 +30,30 @@ static int yylex(void); // added 11/2/11 to ensure no conflict with lex
     
    
 
-%token IF ELSE WHILE RETURN INT VOID INTARRAY VOIDARRAY
+%token IF WHILE RETURN INT VOID INTARRAY VOIDARRAY
 %token NUM ID
 %token ENDFILE ERROR
 
 %token EQ NE LT LE GT GE LPAREN RPAREN LBRACE RBRACE LCURLY RCURLY SEMI COMMA
 
-// Operator precedence
+// To resolve conflicts
+%nonassoc IFONLY
+%nonassoc PARAMONLY
+%right ELSE
+
 %left PLUS MINUS
 %left TIMES OVER
 
 %right ASSIGN
+
 
 // Grammar rules
 %%
 // nonterminals: 
 program: declaration_list { savedTree = $1; };
 
-declaration_list : declaration_list declaration
-                   { YYSTYPE t = $1;
+declaration_list : declaration_list declaration { 
+                    YYSTYPE t = $1;
                      if (t != NULL) {
                        while (t->sibling != NULL) { t = t->sibling; }
                        t->sibling = $2;
@@ -78,7 +83,7 @@ num : NUM{
   };
 
 var_declaration: type_specifier id SEMI {
-  printf("normal var dec\n");
+                    printf("normal var dec\n");
                     $$ = newDecNode(VarDec);
                     $$->lineno=lineno;
                     $$->name=savedName;
@@ -115,44 +120,33 @@ func_declaration : type_specifier id {
                    $$->child[2] = $7;
                  };
 
-/* func_declaration: type_specifier id LPAREN params RPAREN compound_stmt { 
-  printf("func dec\n");
-                  $$ = newDecNode(FuncDec);
-                  $$->lineno = lineno;
-                  $$->name = savedName;
-                  $$->type = savedType;
-                  // $$->child[0] = $1;
-                  $$->child[0] = $4;
-                  $$->child[1] = $6;
-}; */
-
 // about functions
 params: param_list { $$ = $1; printf("params\n");}
       | VOID { printf("no params\n");$$ = newDecNode(ParamDec);
            $$->type = Void;
          };
 
-param_list: param_list COMMA params
-          { printf("param list\n");
-            YYSTYPE t = $1;
-               if (t != NULL) {
-                 while (t->sibling != NULL) { t = t->sibling; }
-                 t->sibling = $3;
-                 $$ = $1;
-               } else {
-                 $$ = $2;
-               }
-             }
-           | param { $$ = $1; };
+param_list: param_list COMMA param { 
+              printf("param list\n");
+              YYSTYPE t = $1;
+              if (t != NULL) {
+                while (t->sibling != NULL) { t = t->sibling; }
+                t->sibling = $3;
+                $$ = $1;
+              } else {
+                $$ = $2;
+              }
+            }
+          | param { $$ = $1; } %prec PARAMONLY;
 
-param : type_specifier id{ 
+param : type_specifier id { 
           printf("normal param\n");
           $$ = newDecNode(ParamDec);
           $$->child[0] = $1;
           $$->type=savedType;
           $$->name = copyString(savedName);
         }
-      | type_specifier id LBRACE RBRACE{ 
+      | type_specifier id LBRACE RBRACE { 
           printf("array param\n");
           $$ = newDecNode(ArrParamDec);
           $$->child[0] = $1;
@@ -170,8 +164,8 @@ compound_stmt: LCURLY local_declarations statement_list RCURLY {
           $$->child[1] = $3;
       };
 
-local_declarations: local_declarations var_declaration
-                     { YYSTYPE t = $1;
+local_declarations: local_declarations var_declaration{ 
+                      YYSTYPE t = $1;
                        if (t != NULL) {
                          while (t->sibling != NULL) { t = t->sibling; }
                          t->sibling = $2;
@@ -182,9 +176,9 @@ local_declarations: local_declarations var_declaration
                      }
                    | { $$ = NULL; };
   
-
-statement_list : statement_list statement
-                 { YYSTYPE t = $1;
+//Statements and Expressions
+statement_list : statement_list statement { 
+                   YYSTYPE t = $1;
                    if (t != NULL) {
                      while (t->sibling != NULL) { t = t->sibling; }
                     t->sibling = $2;
@@ -198,8 +192,8 @@ statement_list : statement_list statement
 
 statement: expression_stmt { $$ = $1; };
          | compound_stmt { $$ = $1; }
-         /* | selection_stmt { $$ = $1; }
-         | iteration_stmt { $$ = $1; }*/
+         | selection_stmt { $$ = $1; }
+         | iteration_stmt { $$ = $1; }
          | return_stmt { $$ = $1; };
 
 expression_stmt: expression SEMI { $$ = $1; }
@@ -222,29 +216,35 @@ expression: var ASSIGN expression {
           }
           | simple_expression { $$ = $1; };
 
-var: id { $$ = newExprNode(IdExpr); $$->name= savedName;}
-   | id LBRACE expression RBRACE { $$ = newExprNode(IdExpr); $$->name=savedName; };
+var: id { $$ = newExprNode(IdExpr); $$->name=savedName;}
+   | id LBRACE {
+      $$ = newExprNode(IdExpr);
+      $$->name=savedName; 
+    }
+    expression RBRACE { 
+      $$ = $3;
+      $$->child[0] = $4;
+    };
 
 simple_expression: additive_expression relop additive_expression { 
-  $$ = newExprNode(OpExpr);
-  $$->child[0] = $1;
-  $$->child[1] = $3;
-  $$->op = savedOp;
- }
+                     $$ = newExprNode(OpExpr);
+                     $$->child[0] = $1;
+                     $$->child[1] = $3;
+                     $$->op = savedOp;
+                   }
                  | additive_expression { $$ = $1; };
 
 relop: LE { savedOp = LE; } 
      | LT { savedOp = LT; } 
      | GT { savedOp = GT; } 
      | GE { savedOp = GE; } 
-     | NE { savedOp = NE; };
+     | NE { savedOp = NE; }
+     | EQ { savedOp = EQ; };
 
 additive_expression: additive_expression addop {
-  $$ = newExprNode(OpExpr);
-  $$->op=savedOp;
-}
-            term { 
-  printf("add expr\n");
+                        $$ = newExprNode(OpExpr);
+                        $$->op=savedOp;
+                    } term { 
                          $$ = $3;
                          $$ -> child[0] = $1;
                          $$ -> child[1] = $4;
@@ -254,46 +254,74 @@ additive_expression: additive_expression addop {
 addop: PLUS { savedOp = PLUS; }
      | MINUS { savedOp = MINUS; };
 
-term: term mulop factor { 
-  $$=newExprNode(OpExpr); 
+term: term mulop {
+$$=newExprNode(OpExpr);
+$$->op=savedOp;  
+}
+factor { 
+  $$ = $3;
   $$->child[0]=$1; 
-  $$->child[1]=$3; 
-  $$->op=savedOp; 
+  $$->child[1]=$4; 
+  
   }
     | factor { $$ = $1; };
+
 
 mulop: TIMES { savedOp = TIMES; }
      | OVER { savedOp = OVER; };
 
 factor: LPAREN expression RPAREN { $$ = $2; }
       | var { $$ = $1; }
-      /* | call { $$ = $1; } */
-      | num
-         { $$ = newExprNode(ConstExpr);
+      | call { $$ = $1; }
+      | num { 
+           $$ = newExprNode(ConstExpr);
            $$->type = Integer;
            $$->val = atoi(tokenString);
          };
 
+// Function Calls
+call: id {
+  $$ = newExprNode(CallExpr);
+  // printf("\n\n%s\n\n\n", savedName);
+  $$->name = copyString(savedName);
+} LPAREN args RPAREN { 
+  $$ = $2;
+  $$->child[0] = $4;
+};
 
+args: arg_list { $$=$1; }
+    | { $$ = NULL; };
 
-              
-/* 
+arg_list: arg_list COMMA expression { 
+   YYSTYPE t = $1;
+             if (t != NULL) {
+               while (t->sibling != NULL) { t = t->sibling; }
+               t->sibling = $3;
+               $$ = $1;
+             } else {
+               $$ = $3;
+             }
+}
+        | expression {$$ = $1;}; 
 
-selection_stmt: IF LPAREN expression RPAREN statement { $$ = $3; }
-              | IF LPAREN expression RPAREN statement ELSE statement { $$ = $3; };
+// If, If/Else
+selection_stmt: IF LPAREN expression RPAREN statement { 
+                  $$ = newStmtNode(IfStmt);
+                  $$->child[0] = $3;
+                  $$->child[1] = $5;
+                } %prec IFONLY
+              | IF LPAREN expression RPAREN statement ELSE statement { 
+                  $$ = newStmtNode(IfElseStmt);
+                  $$->child[0] = $3;
+                  $$->child[1] = $5;
+                  $$->child[2] = $7;
+                };
 
-iteration_stmt: WHILE LPAREN expression RPAREN statement { $$ = $3; };
-
-call: ID LPAREN args RPAREN { };
-
-args: arg_list {  }
-    | ;
-
-arg_list: arg_list COMMA expression { }
-        | expression; 
-        
-
-*/
+iteration_stmt: WHILE LPAREN expression RPAREN statement { 
+                  $$ = newStmtNode(WhileStmt);
+                  $$->child[0] = $3;
+                  $$->child[1] = $5;
+                };
 
 %%
 

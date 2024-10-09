@@ -3,17 +3,9 @@ C-MINUS COMPILATION: ./st.txt
 
 Syntax tree:
   Function Declaration: name = main, type = void
-    Parameter: name = a, type = void[]
+    Void Parameter
     Compound Statement:
-      Return:
-        Op: +
-          Op: *
-            Const: 3
-            Const: 5
-          Op: +
-            Const: 2
-            Op: *
-              Op: /
-                Const: 2
-                Const: 3
-              Const: 5
+      Assign:
+        Variable: name = x
+          Variable: name = i
+        Const: 3

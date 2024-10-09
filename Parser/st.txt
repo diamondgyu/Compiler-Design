@@ -1,8 +1,4 @@
-/*int a;
-void b;*/
-
-
-void main(void a[])
+void main(void)
 {
-    return (3*5)+(2+2/3*5);
+    x[i] = 3;
 }

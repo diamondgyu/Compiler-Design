@@ -55,36 +55,38 @@ extern int yydebug;
     YYerror = 256,                 /* error  */
     YYUNDEF = 257,                 /* "invalid token"  */
     IF = 258,                      /* IF  */
-    ELSE = 259,                    /* ELSE  */
-    WHILE = 260,                   /* WHILE  */
-    RETURN = 261,                  /* RETURN  */
-    INT = 262,                     /* INT  */
-    VOID = 263,                    /* VOID  */
-    INTARRAY = 264,                /* INTARRAY  */
-    VOIDARRAY = 265,               /* VOIDARRAY  */
-    NUM = 266,                     /* NUM  */
-    ID = 267,                      /* ID  */
-    ENDFILE = 268,                 /* ENDFILE  */
-    ERROR = 269,                   /* ERROR  */
-    EQ = 270,                      /* EQ  */
-    NE = 271,                      /* NE  */
-    LT = 272,                      /* LT  */
-    LE = 273,                      /* LE  */
-    GT = 274,                      /* GT  */
-    GE = 275,                      /* GE  */
-    LPAREN = 276,                  /* LPAREN  */
-    RPAREN = 277,                  /* RPAREN  */
-    LBRACE = 278,                  /* LBRACE  */
-    RBRACE = 279,                  /* RBRACE  */
-    LCURLY = 280,                  /* LCURLY  */
-    RCURLY = 281,                  /* RCURLY  */
-    SEMI = 282,                    /* SEMI  */
-    COMMA = 283,                   /* COMMA  */
-    PLUS = 284,                    /* PLUS  */
-    MINUS = 285,                   /* MINUS  */
-    TIMES = 286,                   /* TIMES  */
-    OVER = 287,                    /* OVER  */
-    ASSIGN = 288                   /* ASSIGN  */
+    WHILE = 259,                   /* WHILE  */
+    RETURN = 260,                  /* RETURN  */
+    INT = 261,                     /* INT  */
+    VOID = 262,                    /* VOID  */
+    INTARRAY = 263,                /* INTARRAY  */
+    VOIDARRAY = 264,               /* VOIDARRAY  */
+    NUM = 265,                     /* NUM  */
+    ID = 266,                      /* ID  */
+    ENDFILE = 267,                 /* ENDFILE  */
+    ERROR = 268,                   /* ERROR  */
+    EQ = 269,                      /* EQ  */
+    NE = 270,                      /* NE  */
+    LT = 271,                      /* LT  */
+    LE = 272,                      /* LE  */
+    GT = 273,                      /* GT  */
+    GE = 274,                      /* GE  */
+    LPAREN = 275,                  /* LPAREN  */
+    RPAREN = 276,                  /* RPAREN  */
+    LBRACE = 277,                  /* LBRACE  */
+    RBRACE = 278,                  /* RBRACE  */
+    LCURLY = 279,                  /* LCURLY  */
+    RCURLY = 280,                  /* RCURLY  */
+    SEMI = 281,                    /* SEMI  */
+    COMMA = 282,                   /* COMMA  */
+    IFONLY = 283,                  /* IFONLY  */
+    PARAMONLY = 284,               /* PARAMONLY  */
+    ELSE = 285,                    /* ELSE  */
+    PLUS = 286,                    /* PLUS  */
+    MINUS = 287,                   /* MINUS  */
+    TIMES = 288,                   /* TIMES  */
+    OVER = 289,                    /* OVER  */
+    ASSIGN = 290                   /* ASSIGN  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -94,36 +96,38 @@ extern int yydebug;
 #define YYerror 256
 #define YYUNDEF 257
 #define IF 258
-#define ELSE 259
-#define WHILE 260
-#define RETURN 261
-#define INT 262
-#define VOID 263
-#define INTARRAY 264
-#define VOIDARRAY 265
-#define NUM 266
-#define ID 267
-#define ENDFILE 268
-#define ERROR 269
-#define EQ 270
-#define NE 271
-#define LT 272
-#define LE 273
-#define GT 274
-#define GE 275
-#define LPAREN 276
-#define RPAREN 277
-#define LBRACE 278
-#define RBRACE 279
-#define LCURLY 280
-#define RCURLY 281
-#define SEMI 282
-#define COMMA 283
-#define PLUS 284
-#define MINUS 285
-#define TIMES 286
-#define OVER 287
-#define ASSIGN 288
+#define WHILE 259
+#define RETURN 260
+#define INT 261
+#define VOID 262
+#define INTARRAY 263
+#define VOIDARRAY 264
+#define NUM 265
+#define ID 266
+#define ENDFILE 267
+#define ERROR 268
+#define EQ 269
+#define NE 270
+#define LT 271
+#define LE 272
+#define GT 273
+#define GE 274
+#define LPAREN 275
+#define RPAREN 276
+#define LBRACE 277
+#define RBRACE 278
+#define LCURLY 279
+#define RCURLY 280
+#define SEMI 281
+#define COMMA 282
+#define IFONLY 283
+#define PARAMONLY 284
+#define ELSE 285
+#define PLUS 286
+#define MINUS 287
+#define TIMES 288
+#define OVER 289
+#define ASSIGN 290
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED

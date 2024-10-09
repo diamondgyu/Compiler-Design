@@ -1,10 +1,15 @@
-In this version:
+In this version (Parsing):
 
-- C version is finished
-- Can't start with proper line number - why? - because of no lineno++ in comments
-
-- Function 이름 표시 수정
-- 
+- Function 이름 표시 수정 (쪼개기 방법으로)
+- operation이 가장 최근에 봤던 것이 표출 해결 (쪼개기 방법으로)
+- Parameter type 오류 해결 (type을 cminus.y에서 명시적으로 지정)
+- bison -Wcex cminus.y 명령어를 통해 conflict 파악 후 제거
+- If-Else 와 Param에서 conflict 해결
+- 반복문 투입
+- no parameter vs parameter 확인
+- x[i] = 3 형태의 assign 혹은 식 구문 인식 오류 해결(쪼개기 방법으로)
 
 What to do:
-- 반복문, 조건문 투입
+- return none vs return something 확인
+- lineno 확인
+-기타 warning 확인

@@ -63,7 +63,7 @@ extern int lineno; /* source line number for listing */
 /**************************************************/
 
 typedef enum {Stmt,Expr,Dec} NodeType;
-typedef enum {SelectionStmt,IterationStmt,CompoundStmt,ReturnStmt} StmtType;
+typedef enum {IfStmt,IfElseStmt,WhileStmt,CompoundStmt,ReturnStmt} StmtType;
 typedef enum {IdExpr,OpExpr,ConstExpr,AssignExpr,AccessExpr,IndexExpr,CallExpr,TypeExpr} ExprType;
 typedef enum {VarDec, ArrDec, FuncDec, ParamDec, ArrParamDec} DecType;
 

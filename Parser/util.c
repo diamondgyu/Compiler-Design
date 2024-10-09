@@ -253,18 +253,18 @@ void printTree( TreeNode * tree )
         case CompoundStmt:
           fprintf(listing,"Compound Statement:\n");
           break;
-      //   case SelectionStmt: // IF
-      //     fprintf(listing,"If Statement:\n");
-      //     break;
-        case ReturnStmt:
-          fprintf(listing,"Return:\n");
+        case IfStmt: // IF
+          fprintf(listing,"If Statement:\n");
           break;
-      //   case CallK:
-      //     fprintf(listing,"Call");
-      //     break;
-      //   case AssignK:
-      //     fprintf(listing,"Assign:\n %s",tree->attr.name);
-      //     break;  
+        case IfElseStmt: // IF-ELSE
+          fprintf(listing,"If-Else Statement:\n");
+          break;
+        case WhileStmt: // WHILE
+          fprintf(listing,"While Statement:\n");
+          break;
+        case ReturnStmt:
+          fprintf(listing,"Return Statement:\n");
+          break; 
       //   default:
       //     fprintf(listing,"Unknown ExpNode kind\n");
       //     break;
@@ -273,7 +273,8 @@ void printTree( TreeNode * tree )
     else if (tree->node_type==Expr)
     { 
       // printf("hello\n"); 
-      //  printf("%s\n",getExprType(tree->expr_type));
+       printf("%s\n",getExprType(tree->expr_type));
+      //  printf("%s\n",tree->name);
      switch (tree->expr_type) {
         case OpExpr:
           fprintf(listing,"Op: ");
@@ -290,6 +291,9 @@ void printTree( TreeNode * tree )
           break;
         // case TypeExpr:
         //   fprintf(listing,"Type: %s\n",getType(tree->type));
+        case CallExpr:
+          fprintf(listing,"Call: function name = %s\n",tree->name);
+          break;
         default:
           fprintf(listing,"Unknown ExpNode kind\n");
           break;
@@ -315,6 +319,7 @@ void printTree( TreeNode * tree )
           fprintf(listing,"Parameter: name = %s, type = %s\n",tree->name, getType(tree->type));
           break;
         case ParamDec:
+          if (tree->name == NULL) { fprintf(listing,"Void Parameter\n"); break; }
           fprintf(listing,"Parameter: name = %s, type = %s\n",tree->name, getType(tree->type));
           break;
         default:
