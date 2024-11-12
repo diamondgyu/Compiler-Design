@@ -46,42 +46,45 @@ static void nullProc(TreeNode * t)
  * the symbol table 
  */
 static void insertNode( TreeNode * t)
-{ switch (t->nodekind)
-  { case StmtK:
-      switch (t->kind.stmt)
-      { case AssignK:
-        case ReadK:
-          if (st_lookup(t->attr.name) == -1)
-          /* not yet in table, so treat as new definition */
-            st_insert(t->attr.name,t->lineno,location++);
-          else
-          /* already in table, so ignore location, 
-             add line number of use only */ 
-            st_insert(t->attr.name,t->lineno,0);
-          break;
-        default:
-          break;
-      }
-      break;
-    case ExpK:
-      switch (t->kind.exp)
-      { case IdK:
-          if (st_lookup(t->attr.name) == -1)
-          /* not yet in table, so treat as new definition */
-            st_insert(t->attr.name,t->lineno,location++);
-          else
-          /* already in table, so ignore location, 
-             add line number of use only */ 
-            st_insert(t->attr.name,t->lineno,0);
-          break;
-        default:
-          break;
-      }
-      break;
-    default:
-      break;
-  }
+{
+
 }
+// { switch (t->nodekind)
+//   { case StmtK:
+//       switch (t->kind.stmt)
+//       { case AssignK:
+//         case ReadK:
+//           if (st_lookup(t->attr.name) == -1)
+//           /* not yet in table, so treat as new definition */
+//             st_insert(t->attr.name,t->lineno,location++);
+//           else
+//           /* already in table, so ignore location, 
+//              add line number of use only */ 
+//             st_insert(t->attr.name,t->lineno,0);
+//           break;
+//         default:
+//           break;
+//       }
+//       break;
+//     case ExpK:
+//       switch (t->kind.exp)
+//       { case IdK:
+//           if (st_lookup(t->attr.name) == -1)
+//           /* not yet in table, so treat as new definition */
+//             st_insert(t->attr.name,t->lineno,location++);
+//           else
+//           /* already in table, so ignore location, 
+//              add line number of use only */ 
+//             st_insert(t->attr.name,t->lineno,0);
+//           break;
+//         default:
+//           break;
+//       }
+//       break;
+//     default:
+//       break;
+//   }
+// }
 
 /* Function buildSymtab constructs the symbol 
  * table by preorder traversal of the syntax tree
@@ -103,53 +106,133 @@ static void typeError(TreeNode * t, char * message)
  * type checking at a single tree node
  */
 static void checkNode(TreeNode * t)
-{ switch (t->nodekind)
-  { case ExpK:
-      switch (t->kind.exp)
-      { case OpK:
-          if ((t->child[0]->type != Integer) ||
-              (t->child[1]->type != Integer))
-            typeError(t,"Op applied to non-integer");
-          if ((t->attr.op == EQ) || (t->attr.op == LT))
-            t->type = Boolean;
-          else
-            t->type = Integer;
+{
+  switch (t->node_type)
+  {
+    case Expr:
+    switch (t->expr_type)
+    {
+      // to implement
+      case AssignExpr:
+        if (t->child[0]->type != t->child[1]->type)
+        {
+          fprintf(listing, "Error: invalid assignment at line %d\n", lineno);
+          Error = TRUE;
           break;
-        case ConstK:
-        case IdK:
-          t->type = Integer;
-          break;
-        default:
-          break;
-      }
-      break;
-    case StmtK:
-      switch (t->kind.stmt)
-      { case IfK:
-          if (t->child[0]->type == Integer)
-            typeError(t->child[0],"if test is not Boolean");
-          break;
-        case AssignK:
-          if (t->child[0]->type != Integer)
-            typeError(t->child[0],"assignment of non-integer value");
-          break;
-        case WriteK:
-          if (t->child[0]->type != Integer)
-            typeError(t->child[0],"write of non-integer value");
-          break;
-        case RepeatK:
-          if (t->child[1]->type == Integer)
-            typeError(t->child[1],"repeat test is not Boolean");
-          break;
-        default:
-          break;
-      }
-      break;
-    default:
-      break;
+        }
+        t->type = Integer;
+        break;
+      case AccessExpr:
+        break;
+      case IndexExpr:
+        break;
+      case CallExpr:
+        break;
+      case TypeExpr:
+        break;
 
+      case OpExpr:
+        if ((t->child[0]->type != Integer) ||
+            (t->child[1]->type != Integer))
+          typeError(t,"Op applied to non-integer");
+        if ((t->op == EQ) || (t->op == LT))
+          break;
+          // t->type = Boolean;
+        else
+          t->type = Integer;
+        break;
+      case ConstExpr:
+      case IdExpr:
+        t->type = Integer;
+        break;  
+      default:
+        break;
+    }
+    case Stmt:
+    switch (t->stmt_type)
+    {
+      case IfStmt:
+        break;
+      case IfElseStmt:
+        break;
+      case WhileStmt:
+        break;
+      case ReturnStmt:
+        break;
+      case CompoundStmt:
+        break;
+      default:
+        break;
+    }
+    case Dec:
+    switch (t->stmt_type)
+    {
+      case ArrDec:
+        break;
+      case VarDec:
+        break;
+      case FuncDec:
+        break;
+      case ParamDec:
+        break;
+      case ArrParamDec:
+        break;
+      
+      default:
+        break;
+    }
+    /* code */
+  // in case of operation expression
+  
   }
 }
+// { switch (t->nodekind)
+//   { case ExpK:
+//       switch (t->kind.exp)
+//       { case OpK:
+//           if ((t->child[0]->type != Integer) ||
+//               (t->child[1]->type != Integer))
+//             typeError(t,"Op applied to non-integer");
+//           if ((t->attr.op == EQ) || (t->attr.op == LT))
+//             t->type = Boolean;
+//           else
+//             t->type = Integer;
+//           break;
+//         case ConstK:
+//         case IdK:
+//           t->type = Integer;
+//           break;
+//         default:
+//           break;
+//       }
+//       break;
+//     case StmtK:
+//       switch (t->kind.stmt)
+//       { case IfK:
+//           if (t->child[0]->type == Integer)
+//             typeError(t->child[0],"if test is not Boolean");
+//           break;
+//         case AssignK:
+//           if (t->child[0]->type != Integer)
+//             typeError(t->child[0],"assignment of non-integer value");
+//           break;
+//         case WriteK:
+//           if (t->child[0]->type != Integer)
+//             typeError(t->child[0],"write of non-integer value");
+//           break;
+//         case RepeatK:
+//           if (t->child[1]->type == Integer)
+//             typeError(t->child[1],"repeat test is not Boolean");
+//           break;
+//         default:
+//           break;
+//       }
+//       break;
+//     default:
+//       break;
+
+//   }
+// }
 
 /* Procedure typeCheck performs type checking 
  * by a postorder syntax tree traversal
