@@ -1,11 +1,12 @@
 
-C-MINUS COMPILATION: ./test.1.txt
+C-MINUS COMPILATION: ./test_1_.cm
 
 Syntax tree:
   Function Declaration: name = gcd, type = int
     Parameter: name = u, type = int
     Parameter: name = v, type = int
     Compound Statement:
+      Variable: name = x
       If-Else Statement:
         Op: ==
           Variable: name = v
@@ -37,3 +38,21 @@ Syntax tree:
         Call: function name = gcd
           Variable: name = x
           Variable: name = y
+
+Building Symbol Table...
+6: Error: x not defined
+Error message here: using undeclared symbol
+
+Symbol table:
+
+Symbol Table:
+Name      	Kind      	Type      	ScopeName 	Location  	Line Numbers
+----------	----------	----------	----------	----------	------------
+input     	Function  	Integer   	global    	0         	0 15 15 
+output    	Function  	Void      	global    	0         	0 16 
+gcd       	Function  	Integer   	global    	0         	4 8 16 
+u         	Variable  	Integer   	gcd       	1         	4 7 8 8 
+v         	Variable  	Integer   	gcd       	2         	4 7 8 8 8 
+x         	Variable  	undeclared	gcd       	3         	6 15 16 
+main      	Function  	Void      	gcd       	0         	12 
+y         	Variable  	Integer   	main      	3         	14 15 16 

@@ -152,6 +152,7 @@ param : type_specifier id {
 
 compound_stmt: LCURLY local_declarations statement_list RCURLY { 
           $$ = newStmtNode(CompoundStmt);
+          $$->name = copyString("compound");
           $$->child[0] = $2;
           $$->child[1] = $3;
       };
@@ -199,12 +200,14 @@ return_stmt: RETURN SEMI {
              $$ = newStmtNode(ReturnStmt);
              $$->type = Integer;
              $$->child[0] = $2;
+             $$->name = copyString("return");
             };
 
 expression: var ASSIGN expression { 
             $$ = newExprNode(AssignExpr);
             $$->child[0] = $1;
             $$->child[1] = $3;
+            $$->name = copyString("expression");
           }
           | simple_expression { $$ = $1; };
 
@@ -223,6 +226,7 @@ simple_expression: additive_expression relop additive_expression {
                      $$->child[0] = $1;
                      $$->child[1] = $3;
                      $$->op = savedOp;
+                     $$->name = copyString("simple_expression");
                    }
                  | additive_expression { $$ = $1; };
 
@@ -235,6 +239,7 @@ relop: LE { savedOp = LE; }
 
 additive_expression: additive_expression addop {
                         $$ = newExprNode(OpExpr);
+                        $$->name = copyString("additive_expression");
                         $$->op=savedOp;
                     } term { 
                          $$ = $3;
