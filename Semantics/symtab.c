@@ -180,15 +180,16 @@ Scope st_insert(Scope current_scope, TreeNode* node, int loc)
       printf("Input and output functions added\n");
    }
 
-  //  if (strcmp(node->name, "x") == 0)
-  //  {
+   if (node->name != NULL && strcmp(node->name, "x") == 0)
+   {
 
-  //  }
+   }
    // shallow copy current_scope
    Scope saved_current_scope = current_scope;
+   Scope current_scope_cpy = current_scope;
    Scope scope_of_var;
    if (node->name != NULL)
-    scope_of_var = check_scope(current_scope, node->name);
+    scope_of_var = check_scope(current_scope_cpy, node->name);
    else
     scope_of_var = NULL;
   
@@ -214,7 +215,7 @@ Scope st_insert(Scope current_scope, TreeNode* node, int loc)
         {
           // printf("Declaring function %s\n", node->name);
           // add scope, newScope is a child of current scope
-          Scope newScope = insert_scope(node->name, current_scope);
+          Scope newScope = insert_scope(node->name, current_scope_cpy);
           // add function to the parent scope
           add_new_symbol(saved_current_scope, node, loc);
           // update currentScope
@@ -230,7 +231,7 @@ Scope st_insert(Scope current_scope, TreeNode* node, int loc)
       else 
       {
         // using undeclared symbol: semantic error
-        fprintf(listing, "Error message here: using undeclared symbol\n");
+        // fprintf(listing, "Error message here: using undeclared symbol\n");
         return NULL;
       }
    }
@@ -240,7 +241,14 @@ Scope st_insert(Scope current_scope, TreeNode* node, int loc)
       if (node->node_type == Dec)
       {
         // declaring the symbol twice: semantic error
-        fprintf(listing, "Error message here: using undeclared symbol\n");
+        fprintf(listing, "Error: Symbol \"%s\" is redefined at line %d (already defined at line ", node->name, node->lineno);
+       int i=0;
+       Symbol sym = scope_of_var->symbols[i];
+       while(sym != NULL && strcmp(sym->name, node->name) != 0) { sym = scope_of_var->symbols[++i]; }
+       for (LineList line = sym->lines; line != NULL; line = line->next)
+        fprintf(listing, "%d ", line->lineno);
+
+        fprintf(listing, ")\n");
         return NULL;
       }
       else

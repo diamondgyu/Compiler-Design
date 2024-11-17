@@ -6,7 +6,6 @@ Syntax tree:
     Parameter: name = u, type = int
     Parameter: name = v, type = int
     Compound Statement:
-      Variable: name = x
       If-Else Statement:
         Op: ==
           Variable: name = v
@@ -26,33 +25,31 @@ Syntax tree:
   Function Declaration: name = main, type = void
     Void Parameter
     Compound Statement:
-      Variable Declaration: name = x, type = int
-      Variable Declaration: name = y, type = int
+      Variable Declaration: name = x, type = int[]
+        Const: 3
+      Variable Declaration: name = a, type = int
       Assign:
+        Variable: name = a
+        Variable: name = b
+      Assign:
+        Variable: name = a
         Variable: name = x
-        Call: function name = input
-      Assign:
-        Variable: name = y
-        Call: function name = input
-      Call: function name = output
-        Call: function name = gcd
-          Variable: name = x
-          Variable: name = y
+          Const: 1
 
 Building Symbol Table...
-6: Error: x not defined
-Error message here: using undeclared symbol
+Error: undeclared variable "b" is used at line 15
 
 Symbol table:
 
 Symbol Table:
 Name      	Kind      	Type      	ScopeName 	Location  	Line Numbers
 ----------	----------	----------	----------	----------	------------
-input     	Function  	Integer   	global    	0         	0 15 15 
-output    	Function  	Void      	global    	0         	0 16 
-gcd       	Function  	Integer   	global    	0         	4 8 16 
-u         	Variable  	Integer   	gcd       	1         	4 7 8 8 
-v         	Variable  	Integer   	gcd       	2         	4 7 8 8 8 
-x         	Variable  	undeclared	gcd       	3         	6 15 16 
-main      	Function  	Void      	gcd       	0         	12 
-y         	Variable  	Integer   	main      	3         	14 15 16 
+input     	Function  	Integer   	global    	0         	0 
+output    	Function  	Void      	global    	0         	0 
+gcd       	Function  	Integer   	global    	0         	4 7 
+main      	Function  	Void      	global    	0         	11 
+u         	Variable  	Integer   	gcd       	1         	4 6 7 7 
+v         	Variable  	Integer   	gcd       	2         	4 6 7 7 7 
+x         	Variable  	Integer[] 	main      	2         	13 16 
+a         	Variable  	Integer   	main      	3         	14 15 16 
+b         	Variable  	undeclared	main      	4         	15 

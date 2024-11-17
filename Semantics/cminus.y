@@ -82,22 +82,29 @@ num : NUM{
     $$->val=atoi(copyString(tokenString));
   };
 
-var_declaration: type_specifier id SEMI {
-                    $$ = newDecNode(VarDec);
-                    $$->lineno=lineno;
-                    $$->name=copyString(savedName);
-                    $$->type=savedType;
-                 };
-               | type_specifier id LBRACE num RBRACE SEMI { 
-                    $$ = newDecNode(ArrDec);
-                    $$->child[0] = $1;
-                    $$->child[1] = $4;
-                    $$->lineno=lineno;
-                    $$->name=copyString(savedName);
-                    if (savedType == Integer)
-                      $$->type=IntegerArray;
-                    else
-                      $$->type=VoidArray;
+var_declaration: type_specifier id SEMI
+                 {
+                   $$ = newDecNode(VarDec);
+                   $$->lineno = savedLineNo; /* Use the saved line number */
+                   $$->name = copyString(savedName);
+                   $$->type = savedType;
+                 }
+               | type_specifier id
+                 {
+                   /* Capture the line number of the identifier */
+                   savedLineNo = lineno;
+                 }
+                 LBRACE num RBRACE SEMI
+                 { 
+                   $$ = newDecNode(ArrDec);
+                   $$->child[0] = $1;
+                   $$->child[1] = $5; /* Note: shifted from $4 to $5 due to the added action */
+                   $$->lineno = savedLineNo; /* Use the saved line number */
+                   $$->name = copyString(savedName);
+                   if (savedType == Integer)
+                     $$->type = IntegerArray;
+                   else
+                     $$->type = VoidArray;
                  };
 
 type_specifier: INT { savedType=Integer; };
@@ -208,13 +215,15 @@ expression: var ASSIGN expression {
             $$->child[0] = $1;
             $$->child[1] = $3;
             $$->name = copyString("expression");
+            $$->lineno = savedLineNo;
           }
           | simple_expression { $$ = $1; };
 
-var: id { $$ = newExprNode(IdExpr); $$->name=copyString(savedName);}
+var: id { $$ = newExprNode(IdExpr); $$->name=copyString(savedName); $$->type=savedType; }
    | id LBRACE {
       $$ = newExprNode(IdExpr);
       $$->name=copyString(savedName); 
+      $$->type=Integer;
     }
     expression RBRACE { 
       $$ = $3;

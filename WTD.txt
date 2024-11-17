@@ -2,6 +2,8 @@ In this version (Semantics):
 - tree 구성하기
 
 What to do:
-- handling undeclared problems
+- type checking
+    - typecheck during Assign
+    - typecheck during calculation
+    - typecheck during comparison
 - LINENO modification
-- type checking 수행 (음...)

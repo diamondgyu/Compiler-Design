@@ -37,6 +37,14 @@ static void traverse( TreeNode * t,
       // add to symbol table
       if (t->node_type == Dec)
         new_scope = st_insert(currentScope_cpy, t, location++);
+
+      // when the scope is added for the first time (global)
+      if (currentScope == NULL)
+      {
+        currentScope = new_scope->parent;
+        currentScope_cpy = currentScope;
+      }
+        
       else if (t->node_type == Dec && t->dec_type == ParamDec && t->type == Void)
         does_exist = 1;
 
@@ -44,14 +52,14 @@ static void traverse( TreeNode * t,
       else if (t->node_type == Expr && (t->expr_type == IdExpr || t->expr_type == CallExpr))
       {
         does_exist = st_lookup(currentScope_cpy, t);
+        // if the symbol is not defined
         if (does_exist == 0)
         {
-          if (strcmp(t->name, "x") == 0 )
-          {
-
-          }
           st_insert(currentScope_cpy, t, location++);
-          fprintf(listing, "%d: Error: %s not defined\n", t->lineno, t->name);
+          if (t->expr_type == CallExpr)
+            fprintf(listing, "Error: undeclared function \"%s\" is called at line %d\n", t->name, t->lineno);
+          else
+            fprintf(listing, "Error: undeclared variable \"%s\" is used at line %d\n", t->name, t->lineno);
         }
           
       }
@@ -67,7 +75,8 @@ static void traverse( TreeNode * t,
     postProc(t);
     // if going to the sibling when it is a function, init the location
     if (t->node_type == Dec && t->dec_type == FuncDec) location = 0;
-    traverse(t->sibling,preProc,postProc, new_scope);
+
+    traverse(t->sibling,preProc,postProc, currentScope);
   }
 }
 
@@ -147,84 +156,87 @@ static void typeError(TreeNode * t, char * message)
  */
 static void checkNode(TreeNode * t)
 {
-  // switch (t->node_type)
-  // {
-  //   case Expr:
-  //   switch (t->expr_type)
-  //   {
-  //     // to implement
-  //     case AssignExpr:
-  //       if (t->child[0]->type != t->child[1]->type)
-  //       {
-  //         fprintf(listing, "Error: invalid assignment at line %d\n", lineno);
-  //         Error = TRUE;
-  //         break;
-  //       }
-  //       t->type = Integer;
-  //       break;
-  //     case AccessExpr:
-  //       break;
-  //     case IndexExpr:
-  //       break;
-  //     case CallExpr:
-  //       break;
-  //     case TypeExpr:
-  //       break;
+  switch (t->node_type)
+  {
+    case Expr:
+    switch (t->expr_type)
+    {
+      // to implement
+      case AssignExpr:
+        // printf()
+        if (t->child[0]->type == Integer && t->child[1]->type == Integer)
+          break;
+        else
+        {
+          fprintf(listing, "Error: invalid assignment at line %d\n", lineno);
+          Error = TRUE;
+          break;
+        }
+        t->type = Integer;
+        break;
+      case AccessExpr:
+        break;
+      case IndexExpr:
+        break;
+      case CallExpr:
+        break;
+      case TypeExpr:
+        break;
 
-  //     case OpExpr:
-  //       if ((t->child[0]->type != Integer) ||
-  //           (t->child[1]->type != Integer))
-  //         typeError(t,"Op applied to non-integer");
-  //       if ((t->op == EQ) || (t->op == LT))
-  //         break;
-  //         // t->type = Boolean;
-  //       else
-  //         t->type = Integer;
-  //       break;
-  //     case ConstExpr:
-  //     case IdExpr:
-  //       t->type = Integer;
-  //       break;  
-  //     default:
-  //       break;
-  //   }
-  //   case Stmt:
-  //   switch (t->stmt_type)
-  //   {
-  //     case IfStmt:
-  //       break;
-  //     case IfElseStmt:
-  //       break;
-  //     case WhileStmt:
-  //       break;
-  //     case ReturnStmt:
-  //       break;
-  //     case CompoundStmt:
-  //       break;
-  //     default:
-  //       break;
-  //   }
-  //   case Dec:
-  //   switch (t->stmt_type)
-  //   {
-  //     case ArrDec:
-  //       break;
-  //     case VarDec:
-  //       break;
-  //     case FuncDec:
-  //       break;
-  //     case ParamDec:
-  //       break;
-  //     case ArrParamDec:
-  //       break;
+      case OpExpr:
+        if ((t->child[0]->type != Integer) ||
+            (t->child[1]->type != Integer))
+          typeError(t,"Op applied to non-integer");
+        if ((t->op == EQ) || (t->op == LT))
+          break;
+          // t->type = Boolean;
+        else
+          t->type = Integer;
+        break;
+      case ConstExpr:
+      case IdExpr:
+        t->type = Integer;
+        break;  
+      default:
+        break;
+    }
+    case Stmt:
+    switch (t->stmt_type)
+    {
+      case IfStmt:
+        break;
+      case IfElseStmt:
+        break;
+      case WhileStmt:
+        break;
+      case ReturnStmt:
+        break;
+      case CompoundStmt:
+        break;
+      default:
+        break;
+    }
+    case Dec:
+    switch (t->stmt_type)
+    {
+      case ArrDec:
+        break;
+      case VarDec:
+        break;
+      case FuncDec:
+        break;
+      case ParamDec:
+        break;
+      case ArrParamDec:
+        break;
       
-  //     default:
-  //       break;
-  //   }
-  //   /* code */
-  // // in case of operation expression
+      default:
+        break;
+    }
+    /* code */
+  // in case of operation expression
   
-  // }
+  }
 }
 // { switch (t->nodekind)
 //   { case ExpK:
@@ -270,9 +282,6 @@ static void checkNode(TreeNode * t)
 //       break;
 //     default:
 //       break;
-
-//   }
-// }
 
 /* Procedure typeCheck performs type checking 
  * by a postorder syntax tree traversal
