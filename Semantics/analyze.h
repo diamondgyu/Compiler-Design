@@ -8,6 +8,9 @@
 #ifndef _ANALYZE_H_
 #define _ANALYZE_H_
 
+#include "globals.h"
+#include "symtab.h"
+
 /* Function buildSymtab constructs the symbol 
  * table by preorder traversal of the syntax tree
  */
@@ -17,5 +20,7 @@ void buildSymtab(TreeNode *);
  * by a postorder syntax tree traversal
  */
 void typeCheck(TreeNode *);
+
+static void checkNode(TreeNode *, Scope);
 
 #endif

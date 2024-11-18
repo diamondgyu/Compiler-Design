@@ -22,22 +22,49 @@ Syntax tree:
                   Variable: name = u
                   Variable: name = v
                 Variable: name = v
+      Void Return
   Function Declaration: name = main, type = void
     Void Parameter
     Compound Statement:
       Variable Declaration: name = x, type = int[]
         Const: 3
-      Variable Declaration: name = a, type = int
-      Assign:
-        Variable: name = a
-        Variable: name = b
-      Assign:
-        Variable: name = a
-        Variable: name = x
-          Const: 1
+      Variable Declaration: name = y, type = int[]
+        Const: 4
+      Variable Declaration: name = z, type = int
+      Variable Declaration: name = A, type = void
+      If-Else Statement:
+        Op: ==
+          Variable: name = z
+          Const: 3
+        Op: +
+          Variable: name = z
+          Const: 3
+        Op: +
+          Variable: name = z
+          Const: 2
+      If Statement:
+        Op: +
+          Variable: name = z
+          Const: 3
+        Op: +
+          Variable: name = z
+          Const: 3
+      While Statement:
+        Op: +
+          Variable: name = z
+          Const: 3
+        Compound Statement:
+          Op: +
+            Variable: name = z
+            Const: 3
+          Op: +
+            Variable: name = z
+            Const: 4
+  Function Declaration: name = V, type = void
+    Void Parameter
+    Compound Statement:
 
 Building Symbol Table...
-Error: undeclared variable "b" is used at line 15
 
 Symbol table:
 
@@ -47,9 +74,19 @@ Name      	Kind      	Type      	ScopeName 	Location  	Line Numbers
 input     	Function  	Integer   	global    	0         	0 
 output    	Function  	Void      	global    	0         	0 
 gcd       	Function  	Integer   	global    	0         	4 7 
-main      	Function  	Void      	global    	0         	11 
+main      	Function  	Void      	global    	3         	13 
+V         	Function  	Void      	global    	9         	36 
 u         	Variable  	Integer   	gcd       	1         	4 6 7 7 
 v         	Variable  	Integer   	gcd       	2         	4 6 7 7 7 
-x         	Variable  	Integer[] 	main      	2         	13 16 
-a         	Variable  	Integer   	main      	3         	14 15 16 
-b         	Variable  	undeclared	main      	4         	15 
+x         	Variable  	Integer[] 	main      	5         	15 
+y         	Variable  	Integer[] 	main      	6         	16 
+z         	Variable  	Integer   	main      	7         	17 20 20 21 23 23 27 27 27 
+A         	Variable  	Void      	main      	8         	18 
+
+Checking Types...
+Error: Invalid return at line 9
+Error: The void-type variable is declared at line 18 (name : "A")
+Error: invalid condition at line 25
+Error: invalid condition at line 30
+
+Type Checking Finished

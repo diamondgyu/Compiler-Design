@@ -82,6 +82,11 @@ int st_lookup(Scope scope, TreeNode* node) {
    return 0;
 }
 
+Scope getScopeRoot()
+{
+  return scopeTree;
+}
+
   // add new symbol to current scope
   // if type is void and kind is variable, add 'undetermined'
 int add_new_symbol(Scope scope, TreeNode* node, int loc)
@@ -158,7 +163,7 @@ Scope st_insert(Scope current_scope, TreeNode* node, int loc)
    // when root node is null, init the root node and add two functions at lineno 0
    if (scopeTree == NULL) {
       scopeTree = insert_scope("global", NULL);
-      printf("Global scope created\n");
+      // printf("Global scope created\n");
       current_scope = scopeTree;
 
       TreeNode* inputftn_node = (TreeNode*)calloc(1, sizeof(TreeNode));
@@ -177,7 +182,7 @@ Scope st_insert(Scope current_scope, TreeNode* node, int loc)
 
       add_new_symbol(current_scope, inputftn_node, 0);
       add_new_symbol(current_scope, outputftn_node, 0);
-      printf("Input and output functions added\n");
+      // printf("Input and output functions added\n");
    }
 
    if (node->name != NULL && strcmp(node->name, "x") == 0)
@@ -193,10 +198,10 @@ Scope st_insert(Scope current_scope, TreeNode* node, int loc)
    else
     scope_of_var = NULL;
   
-  printf("scope_of_var: %ld, name_var: %S\n", scope_of_var, node->name);
+  // printf("scope_of_var: %ld, name_var: %S\n", scope_of_var, node->name);
   
-   if (scope_of_var != NULL)
-    printf("scope_of_var: %S, name_var: %S\n", scope_of_var->name, node->name);
+  //  if (scope_of_var != NULL)
+  //   printf("scope_of_var: %S, name_var: %S\n", scope_of_var->name, node->name);
    
    // the symbol is not in the current scope
    if (scope_of_var == NULL)

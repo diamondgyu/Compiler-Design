@@ -3,7 +3,7 @@ In this version (Semantics):
 
 What to do:
 - type checking
-    - typecheck during Assign
-    - typecheck during calculation
-    - typecheck during comparison
+    if/while condition check
+     - type checking finished, lineno left
+    function parameters
 - LINENO modification

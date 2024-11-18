@@ -190,11 +190,11 @@ statement_list : statement_list statement {
                | { $$ = NULL; };
 
 
-statement: expression_stmt { $$ = $1; };
-         | compound_stmt { $$ = $1; }
-         | selection_stmt { $$ = $1; }
-         | iteration_stmt { $$ = $1; }
-         | return_stmt { $$ = $1; };
+statement: expression_stmt { $$ = $1; savedLineNo = lineno; };
+         | compound_stmt { $$ = $1; savedLineNo = lineno; }
+         | selection_stmt { $$ = $1; savedLineNo = lineno; }
+         | iteration_stmt { $$ = $1; savedLineNo = lineno; }
+         | return_stmt { $$ = $1; savedLineNo = lineno; };
 
 expression_stmt: expression SEMI { $$ = $1; }
                | SEMI { $$ = 0; };
@@ -314,18 +314,21 @@ selection_stmt: IF LPAREN expression RPAREN statement {
                   $$ = newStmtNode(IfStmt);
                   $$->child[0] = $3;
                   $$->child[1] = $5;
+                  $$->lineno = savedLineNo;
                 } %prec IFONLY
               | IF LPAREN expression RPAREN statement ELSE statement { 
                   $$ = newStmtNode(IfElseStmt);
                   $$->child[0] = $3;
                   $$->child[1] = $5;
                   $$->child[2] = $7;
+                  $$->lineno = savedLineNo;
                 };
 
 iteration_stmt: WHILE LPAREN expression RPAREN statement { 
                   $$ = newStmtNode(WhileStmt);
                   $$->child[0] = $3;
                   $$->child[1] = $5;
+                  $$->lineno = savedLineNo;
                 };
 
 %%

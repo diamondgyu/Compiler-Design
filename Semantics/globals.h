@@ -68,7 +68,7 @@ typedef enum {IdExpr,OpExpr,ConstExpr,AssignExpr,AccessExpr,IndexExpr,CallExpr,T
 typedef enum {VarDec, ArrDec, FuncDec, ParamDec, ArrParamDec} DecType;
 
 /* ExpType is used for type checking */
-typedef enum {Void,Integer,VoidArray,IntegerArray,Undeclared} TypeType;
+typedef enum {Void,Integer,VoidArray,IntegerArray,Undeclared,IntegerWasArray,Bool} TypeType;
 
 #define MAXCHILDREN 3
 

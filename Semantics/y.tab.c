@@ -696,7 +696,7 @@ static const yytype_int16 yyrline[] =
      223,   233,   240,   242,   243,   244,   245,   246,   247,   249,
      249,   258,   260,   261,   263,   263,   273,   276,   277,   279,
      280,   281,   282,   289,   289,   297,   298,   300,   310,   313,
-     318,   325
+     319,   327
 };
 #endif
 
@@ -1574,31 +1574,31 @@ yyreduce:
 
   case 27: /* statement: expression_stmt  */
 #line 193 "cminus.y"
-                           { yyval = yyvsp[0]; }
+                           { yyval = yyvsp[0]; savedLineNo = lineno; }
 #line 1579 "y.tab.c"
     break;
 
   case 28: /* statement: compound_stmt  */
 #line 194 "cminus.y"
-                         { yyval = yyvsp[0]; }
+                         { yyval = yyvsp[0]; savedLineNo = lineno; }
 #line 1585 "y.tab.c"
     break;
 
   case 29: /* statement: selection_stmt  */
 #line 195 "cminus.y"
-                          { yyval = yyvsp[0]; }
+                          { yyval = yyvsp[0]; savedLineNo = lineno; }
 #line 1591 "y.tab.c"
     break;
 
   case 30: /* statement: iteration_stmt  */
 #line 196 "cminus.y"
-                          { yyval = yyvsp[0]; }
+                          { yyval = yyvsp[0]; savedLineNo = lineno; }
 #line 1597 "y.tab.c"
     break;
 
   case 31: /* statement: return_stmt  */
 #line 197 "cminus.y"
-                       { yyval = yyvsp[0]; }
+                       { yyval = yyvsp[0]; savedLineNo = lineno; }
 #line 1603 "y.tab.c"
     break;
 
@@ -1892,33 +1892,36 @@ yyval->op=savedOp;
                   yyval = newStmtNode(IfStmt);
                   yyval->child[0] = yyvsp[-2];
                   yyval->child[1] = yyvsp[0];
+                  yyval->lineno = savedLineNo;
                 }
-#line 1897 "y.tab.c"
+#line 1898 "y.tab.c"
     break;
 
   case 70: /* selection_stmt: IF LPAREN expression RPAREN statement ELSE statement  */
-#line 318 "cminus.y"
+#line 319 "cminus.y"
                                                                      { 
                   yyval = newStmtNode(IfElseStmt);
                   yyval->child[0] = yyvsp[-4];
                   yyval->child[1] = yyvsp[-2];
                   yyval->child[2] = yyvsp[0];
+                  yyval->lineno = savedLineNo;
                 }
-#line 1908 "y.tab.c"
+#line 1910 "y.tab.c"
     break;
 
   case 71: /* iteration_stmt: WHILE LPAREN expression RPAREN statement  */
-#line 325 "cminus.y"
+#line 327 "cminus.y"
                                                          { 
                   yyval = newStmtNode(WhileStmt);
                   yyval->child[0] = yyvsp[-2];
                   yyval->child[1] = yyvsp[0];
+                  yyval->lineno = savedLineNo;
                 }
-#line 1918 "y.tab.c"
+#line 1921 "y.tab.c"
     break;
 
 
-#line 1922 "y.tab.c"
+#line 1925 "y.tab.c"
 
       default: break;
     }
@@ -2111,7 +2114,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 331 "cminus.y"
+#line 334 "cminus.y"
 
 
 

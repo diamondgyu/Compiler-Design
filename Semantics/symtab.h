@@ -60,4 +60,8 @@ int st_lookup (Scope scope, TreeNode* node);
  */
 void printSymTab(FILE * listing);
 
+Scope getScopeRoot();
+
+Scope check_scope(Scope scope, char* name);
+
 #endif
