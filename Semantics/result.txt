@@ -1,7 +1,8 @@
 
-C-MINUS COMPILATION: ./test_4.cm
+C-MINUS COMPILATION: ./test_1_.cm
 
 Building Symbol Table...
+Error: undeclared variable "t" is used at line 12
 
 Symbol table:
 
@@ -9,11 +10,17 @@ Symbol Table:
 Name      	Kind      	Type      	ScopeName 	Location  	Line Numbers
 ----------	----------	----------	----------	----------	------------
 input     	Function  	Integer   	global    	0         	0 
-output    	Function  	Void      	global    	0         	0 4 
+output    	Function  	Void      	global    	0         	0 
 main      	Function  	Integer   	global    	0         	1 
-x         	Variable  	Integer[] 	main      	2         	3 4 
+x         	Variable  	Integer   	main      	2         	3 8 12 
+y         	Variable  	Integer[] 	main      	3         	4 9 
+z         	Variable  	Integer   	main      	4         	5 7 
+t         	Variable  	undeclared	main      	5         	12 
 
 Checking Types...
-Error: Invalid array indexing at line 4 (name : "x"). indicies should be integer
+Error: invalid operation at line 7
+Error: invalid operation at line 11
+Error: invalid operation at line 7
+Error: invalid assignment at line 7
 
 Type Checking Finished

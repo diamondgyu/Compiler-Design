@@ -321,12 +321,14 @@ selection_stmt: IF LPAREN expression RPAREN statement {
                   $$ = newStmtNode(IfStmt);
                   $$->child[0] = $3;
                   $$->child[1] = $5;
+                  $$->child[1]->lineno = savedLineNo;
                   $$->lineno = savedLineNo;
                 } %prec IFONLY
               | IF LPAREN expression RPAREN statement ELSE statement { 
                   $$ = newStmtNode(IfElseStmt);
                   $$->child[0] = $3;
                   $$->child[1] = $5;
+                  $$->child[1]->lineno = savedLineNo;
                   $$->child[2] = $7;
                   $$->lineno = savedLineNo;
                 };
@@ -335,6 +337,7 @@ iteration_stmt: WHILE LPAREN expression RPAREN statement {
                   $$ = newStmtNode(WhileStmt);
                   $$->child[0] = $3;
                   $$->child[1] = $5;
+                  $$->child[1]->lineno = savedLineNo;
                   $$->lineno = savedLineNo;
                 };
 

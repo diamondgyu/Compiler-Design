@@ -698,7 +698,7 @@ static const yytype_int16 yyrline[] =
      224,   235,   243,   245,   246,   247,   248,   249,   250,   252,
      252,   262,   264,   265,   267,   267,   278,   281,   282,   284,
      284,   285,   286,   287,   295,   295,   304,   305,   307,   317,
-     320,   326,   334
+     320,   327,   336
 };
 #endif
 
@@ -1912,36 +1912,39 @@ yyval->lineno=yyvsp[-1]->lineno;
                   yyval = newStmtNode(IfStmt);
                   yyval->child[0] = yyvsp[-2];
                   yyval->child[1] = yyvsp[0];
+                  yyval->child[1]->lineno = savedLineNo;
                   yyval->lineno = savedLineNo;
                 }
-#line 1918 "y.tab.c"
+#line 1919 "y.tab.c"
     break;
 
   case 71: /* selection_stmt: IF LPAREN expression RPAREN statement ELSE statement  */
-#line 326 "cminus.y"
+#line 327 "cminus.y"
                                                                      { 
                   yyval = newStmtNode(IfElseStmt);
                   yyval->child[0] = yyvsp[-4];
                   yyval->child[1] = yyvsp[-2];
+                  yyval->child[1]->lineno = savedLineNo;
                   yyval->child[2] = yyvsp[0];
                   yyval->lineno = savedLineNo;
                 }
-#line 1930 "y.tab.c"
+#line 1932 "y.tab.c"
     break;
 
   case 72: /* iteration_stmt: WHILE LPAREN expression RPAREN statement  */
-#line 334 "cminus.y"
+#line 336 "cminus.y"
                                                          { 
                   yyval = newStmtNode(WhileStmt);
                   yyval->child[0] = yyvsp[-2];
                   yyval->child[1] = yyvsp[0];
+                  yyval->child[1]->lineno = savedLineNo;
                   yyval->lineno = savedLineNo;
                 }
-#line 1941 "y.tab.c"
+#line 1944 "y.tab.c"
     break;
 
 
-#line 1945 "y.tab.c"
+#line 1948 "y.tab.c"
 
       default: break;
     }
@@ -2134,7 +2137,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 341 "cminus.y"
+#line 344 "cminus.y"
 
 
 

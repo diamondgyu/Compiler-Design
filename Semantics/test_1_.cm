@@ -1,23 +1,16 @@
-/* A program to perform Euclid's
-   Algorithm to computer gcd */
-
-int gcd (int u, int v, int w, int x[])
+int main(void)
 {
-	if (v == 0) return u;
-	else return gcd(v,u-u/v*v);
+	int x;
+	int y[5];
+	int z;
 
-	return;
+	z = (
+		x+
+		y
+	)*
+	(
+		x-t
+	);
 
+	return 0;
 }
-
-void main(void)
-{
-	int a;
-	int b;
-	int c;
-	int d[3];
-	int e;
-
-	e = gcd(a, b, c, d);
-}
-

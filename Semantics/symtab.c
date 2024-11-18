@@ -56,7 +56,7 @@ Scope check_scope(Scope scope, char* name)
    while(scope_cpy != NULL) {
       // check if any symbol has the same name
       for(int i=0; i<scope_cpy->num_symbols; i++) {
-         if (strcmp(scope_cpy->symbols[i]->name, name) == 0) {
+         if (strcmp(scope_cpy->symbols[i]->name, name) == 0 && strcmp(scope_cpy->symbols[i]->type, "undeclared") != 0) {
             return scope_cpy;
          }
       }

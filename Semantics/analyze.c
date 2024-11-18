@@ -202,9 +202,16 @@ static void checkNode(TreeNode * t, Scope scope)
         printf("%d: %ld %ld\n", t->op, t->child[0]->type, t->child[1]->type);
         printf("%d: %s %s\n", t->op, t->child[0]->name, t->child[1]->name);
 
+        if (t->child[0]->type == Undeclared || t->child[1]->type == Undeclared)
+        {
+          fprintf(listing, "Error: invalid assignment at line %d\n", t->lineno);
+          break;
+        }
+
         if ((t->child[0]->type == t->child[1]->type) 
         || (t->child[0]->type == IntegerWasArray && t->child[1]->type == Integer) 
-        || (t->child[0]->type == Integer && t->child[1]->type == IntegerWasArray))
+        || (t->child[0]->type == Integer && t->child[1]->type == IntegerWasArray)
+        || (t->child[0]->type != Undeclared && t->child[1]->type != Undeclared))
         {
           break;
         }
@@ -213,15 +220,6 @@ static void checkNode(TreeNode * t, Scope scope)
           fprintf(listing, "Error: invalid assignment at line %d\n", t->lineno);
           Error = TRUE;
         }
-        // // printf()
-        // if (t->child[0]->type == Integer && t->child[1]->type == Integer)
-        //   break;
-        // else
-        // {
-        //   fprintf(listing, "Error: invalid assignment at line %d\n", lineno);
-        //   Error = TRUE;
-        //   break;
-        // }
         break;
       case AccessExpr:
         break;
@@ -233,6 +231,12 @@ static void checkNode(TreeNode * t, Scope scope)
       //1. bring the parameter nodes of the function
       printf("%s  %s\n", t->name, scope_copy->name);
       Scope function_scope = check_scope(scope_copy, t->name);
+      if (function_scope == NULL)
+      {
+        fprintf(listing, "Error: Invalid function call at line %d (name : \"%s\")\n", t->lineno, t->name);
+        t->type = Undeclared;
+        break;
+      }
       TreeNode* function = function_scope->symbols[0]->node;
       for(int i = 0; strcmp(function_scope->symbols[i]->name, t->name) != 0; i++) function = function_scope->symbols[i+1]->node;
       
@@ -276,9 +280,14 @@ static void checkNode(TreeNode * t, Scope scope)
       case OpExpr:
        // printf("%d %s %s\n", t->op, t->child[0]->type==Integer?"int":"int[]", t->child[1]->type==Integer?"int":"int[]");
         if ((t->child[0]->type != Integer && t->child[0]->type != IntegerWasArray) ||
-            (t->child[1]->type != Integer && t->child[1]->type != IntegerWasArray))
+            (t->child[1]->type != Integer && t->child[1]->type != IntegerWasArray) ||
+            (t->child[0]->type == Undeclared || t->child[1]->type == Undeclared))
+        {
           fprintf(listing, "Error: invalid operation at line %d\n", t->lineno);
           t->type = Undeclared;
+          break;
+        }
+        
         if ((t->op == EQ) || (t->op == LT) || (t->op == GT) || (t->op == LE) || (t->op == GE) || (t->op == NE))
           t->type = Bool;
           // t->type = Boolean;
@@ -294,8 +303,10 @@ static void checkNode(TreeNode * t, Scope scope)
         Scope var_scope = check_scope(scope_copy, t->name);
         // Undeclared: do nothing
         if (var_scope == NULL)
+        {
+          t->type = Undeclared;
           break;
-        
+        }
         
         Symbol s = var_scope->symbols[0];
         for(int i=0; strcmp(s->name, t->name)!=0; i++) s = var_scope->symbols[i];
@@ -330,34 +341,37 @@ static void checkNode(TreeNode * t, Scope scope)
 
       case IfStmt:
         if (t->child[0] == NULL)
-          fprintf(listing, "Error: invalid condition at line %d\n", t->child[0]->lineno);
+          fprintf(listing, "Error: invalid condition at line %d\n", t->child[1]->lineno);
         else if (t->child[0]->type != Bool)
-          fprintf(listing, "Error: invalid condition at line %d\n", t->child[0]->lineno);
+          fprintf(listing, "Error: invalid condition at line %d\n", t->child[1]->lineno);
         break;
       case IfElseStmt:
         if (t->child[0] == NULL)
-          fprintf(listing, "Error: invalid condition at line %d\n", t->child[0]->lineno);
+          fprintf(listing, "Error: invalid condition at line %d\n", t->child[1]->lineno);
         else if (t->child[0]->type != Bool)
-          fprintf(listing, "Error: invalid condition at line %d\n", t->child[0]->lineno);
+          fprintf(listing, "Error: invalid condition at line %d\n", t->child[1]->lineno);
         break;
       case WhileStmt:
         if (t->child[0] == NULL)
-          fprintf(listing, "Error: invalid condition at line %d\n", t->child[0]->lineno);
+          fprintf(listing, "Error: invalid condition at line %d\n", t->child[1]->lineno);
         else if (t->child[0]->type != Bool)
-          fprintf(listing, "Error: invalid condition at line %d\n", t->child[0]->lineno);
+          fprintf(listing, "Error: invalid condition at line %d\n", t->child[1]->lineno);
         break;
       case ReturnStmt:
         Scope sc = check_scope(scope_copy, scope_copy->name);
         Symbol s = sc->symbols[0];
         for(int i=0; strcmp(s->name, scope_copy->name)!=0; i++) s = sc->symbols[i];
+        // when there is a return in void function
         if (strcmp(s->type, "Void") == 0)
         {
           if (t->child[0] != NULL)
             fprintf(listing, "Error: Invalid return at line %d\n", t->lineno);
         }
+        // when there is no return in int ftn
         else
         {
-          if (t->child[0] == NULL)
+          printf("%d\n", s->type);
+          if (t->child[0] == NULL || t->child[0]->type != Integer)
             fprintf(listing, "Error: Invalid return at line %d\n", t->lineno);
         }
         break;
