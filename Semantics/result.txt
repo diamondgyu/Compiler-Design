@@ -31,7 +31,6 @@ Syntax tree:
       Variable Declaration: name = y, type = int[]
         Const: 4
       Variable Declaration: name = z, type = int
-      Variable Declaration: name = A, type = void
       If-Else Statement:
         Op: ==
           Variable: name = z
@@ -60,11 +59,21 @@ Syntax tree:
           Op: +
             Variable: name = z
             Const: 4
+      Call: function name = V
+      Op: -
+        Variable: name = x
+        Variable: name = y
+      Assign:
+        Variable: name = y
+        Op: +
+          Variable: name = x
+          Variable: name = z
   Function Declaration: name = V, type = void
     Void Parameter
     Compound Statement:
 
 Building Symbol Table...
+Error: undeclared function "V" is called at line 35
 
 Symbol table:
 
@@ -75,18 +84,20 @@ input     	Function  	Integer   	global    	0         	0
 output    	Function  	Void      	global    	0         	0 
 gcd       	Function  	Integer   	global    	0         	4 7 
 main      	Function  	Void      	global    	3         	13 
-V         	Function  	Void      	global    	9         	36 
+V         	Function  	Void      	global    	9         	50 
 u         	Variable  	Integer   	gcd       	1         	4 6 7 7 
 v         	Variable  	Integer   	gcd       	2         	4 6 7 7 7 
-x         	Variable  	Integer[] 	main      	5         	15 
-y         	Variable  	Integer[] 	main      	6         	16 
-z         	Variable  	Integer   	main      	7         	17 20 20 21 23 23 27 27 27 
-A         	Variable  	Void      	main      	8         	18 
+x         	Variable  	Integer[] 	main      	5         	15 38 44 
+y         	Variable  	Integer[] 	main      	6         	16 40 43 
+z         	Variable  	Integer   	main      	7         	17 20 20 21 23 23 27 28 28 46 
+V         	Function  	undeclared	main      	8         	35 
 
 Checking Types...
 Error: Invalid return at line 9
-Error: The void-type variable is declared at line 18 (name : "A")
-Error: invalid condition at line 25
-Error: invalid condition at line 30
+Error: invalid condition at line 23
+Error: invalid condition at line 32
+Error: invalid operation at line 38
+Error: invalid operation at line 44
+Error: invalid assignment at line 43
 
 Type Checking Finished

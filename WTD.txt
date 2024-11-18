@@ -3,7 +3,5 @@ In this version (Semantics):
 
 What to do:
 - type checking
-    if/while condition check
-     - type checking finished, lineno left
     function parameters
-- LINENO modification
+    expression lineno problem

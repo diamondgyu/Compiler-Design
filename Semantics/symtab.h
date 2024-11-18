@@ -26,6 +26,7 @@ typedef struct Symbol {
     char* name;
     char* kind;
     char* type;
+    TreeNode* node;
     struct Scope* scope;
     LineList lines;
     int location;

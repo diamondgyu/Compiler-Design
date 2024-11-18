@@ -20,6 +20,7 @@ static int savedLineNo;  /* ditto */
 static TreeNode * savedTree; /* stores syntax tree for later return */
 static int savedNum;
 static int savedOp;
+static int savedLineNoParen;
 static int yylex(void); // added 11/2/11 to ensure no conflict with lex
 static int yyerror(char* s);
 
@@ -196,7 +197,7 @@ statement: expression_stmt { $$ = $1; savedLineNo = lineno; };
          | iteration_stmt { $$ = $1; savedLineNo = lineno; }
          | return_stmt { $$ = $1; savedLineNo = lineno; };
 
-expression_stmt: expression SEMI { $$ = $1; }
+expression_stmt: expression SEMI { $$ = $1; $$->lineno = $1->lineno; }
                | SEMI { $$ = 0; };
 
 return_stmt: RETURN SEMI { 
@@ -215,15 +216,16 @@ expression: var ASSIGN expression {
             $$->child[0] = $1;
             $$->child[1] = $3;
             $$->name = copyString("expression");
-            $$->lineno = savedLineNo;
+            $$->lineno = $1->lineno;
           }
-          | simple_expression { $$ = $1; };
+          | simple_expression { $$ = $1; $$->lineno = $1->lineno;};
 
-var: id { $$ = newExprNode(IdExpr); $$->name=copyString(savedName); $$->type=savedType; }
+var: id { $$ = newExprNode(IdExpr); $$->name=copyString(savedName); $$->type=savedType; $$->lineno = savedLineNo; }
    | id LBRACE {
       $$ = newExprNode(IdExpr);
       $$->name=copyString(savedName); 
       $$->type=Integer;
+      $$->lineno = savedLineNo;
     }
     expression RBRACE { 
       $$ = $3;
@@ -236,8 +238,9 @@ simple_expression: additive_expression relop additive_expression {
                      $$->child[1] = $3;
                      $$->op = savedOp;
                      $$->name = copyString("simple_expression");
+                     $$->lineno = $1->lineno;
                    }
-                 | additive_expression { $$ = $1; };
+                 | additive_expression { $$ = $1; $$->lineno = $1->lineno; };
 
 relop: LE { savedOp = LE; } 
      | LT { savedOp = LT; } 
@@ -250,19 +253,21 @@ additive_expression: additive_expression addop {
                         $$ = newExprNode(OpExpr);
                         $$->name = copyString("additive_expression");
                         $$->op=savedOp;
+                        $$->lineno=$1->lineno;
                     } term { 
                          $$ = $3;
                          $$ -> child[0] = $1;
                          $$ -> child[1] = $4;
                     }
-                   | term { $$ = $1; };
+                   | term { $$ = $1; $$->lineno = $1->lineno; };
 
 addop: PLUS { savedOp = PLUS; }
      | MINUS { savedOp = MINUS; };
 
 term: term mulop {
 $$=newExprNode(OpExpr);
-$$->op=savedOp;  
+$$->op=savedOp; 
+$$->lineno=$1->lineno;
 }
 factor { 
   $$ = $3;
@@ -270,25 +275,27 @@ factor {
   $$->child[1]=$4; 
   
   }
-    | factor { $$ = $1; };
+    | factor { $$ = $1; $$->lineno = $1->lineno; };
 
 
 mulop: TIMES { savedOp = TIMES; }
      | OVER { savedOp = OVER; };
 
-factor: LPAREN expression RPAREN { $$ = $2; }
-      | var { $$ = $1; }
-      | call { $$ = $1; }
+factor: LPAREN { savedLineNoParen = lineno; } expression RPAREN { $$ = $3; $$->lineno = savedLineNoParen; }
+      | var { $$ = $1; $$->lineno = $1->lineno;}
+      | call { $$ = $1; $$->lineno = $1->lineno; }
       | num { 
            $$ = newExprNode(ConstExpr);
            $$->type = Integer;
            $$->val = atoi(copyString(tokenString));
+           $$->lineno = $1->lineno;
          };
 
 // Function Calls
 call: id {
   $$ = newExprNode(CallExpr);
   $$->name = copyString(savedName);
+  $$->lineno = lineno;
 } LPAREN args RPAREN { 
   $$ = $2;
   $$->child[0] = $4;

@@ -228,7 +228,12 @@ static void checkNode(TreeNode * t, Scope scope)
       case IndexExpr:
         break;
       case CallExpr:
+      //fprintf(listing, "Error: Invalid function call at line %d (name : \"%s\")\n", t->lineno, t->name);
       // check if the function call is valid
+      //1. bring the parameter nodes of the function
+      TreeNode* function = check
+      //2. check if the parameter nodes are valid
+      //3. check if the return type of the function is valid
         break;
       case TypeExpr:
         break;
@@ -287,24 +292,24 @@ static void checkNode(TreeNode * t, Scope scope)
     case Stmt:
     switch (t->stmt_type)
     {
-      
+
       case IfStmt:
         if (t->child[0] == NULL)
-          fprintf(listing, "Error: invalid condition at line %d\n", t->lineno);
+          fprintf(listing, "Error: invalid condition at line %d\n", t->child[0]->lineno);
         else if (t->child[0]->type != Bool)
-          fprintf(listing, "Error: invalid condition at line %d\n", t->lineno);
+          fprintf(listing, "Error: invalid condition at line %d\n", t->child[0]->lineno);
         break;
       case IfElseStmt:
         if (t->child[0] == NULL)
-          fprintf(listing, "Error: invalid condition at line %d\n", t->lineno);
+          fprintf(listing, "Error: invalid condition at line %d\n", t->child[0]->lineno);
         else if (t->child[0]->type != Bool)
-          fprintf(listing, "Error: invalid condition at line %d\n", t->lineno);
+          fprintf(listing, "Error: invalid condition at line %d\n", t->child[0]->lineno);
         break;
       case WhileStmt:
         if (t->child[0] == NULL)
-          fprintf(listing, "Error: invalid condition at line %d\n", t->lineno);
+          fprintf(listing, "Error: invalid condition at line %d\n", t->child[0]->lineno);
         else if (t->child[0]->type != Bool)
-          fprintf(listing, "Error: invalid condition at line %d\n", t->lineno);
+          fprintf(listing, "Error: invalid condition at line %d\n", t->child[0]->lineno);
         break;
       case ReturnStmt:
         Scope sc = check_scope(scope_copy, scope_copy->name);

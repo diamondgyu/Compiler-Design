@@ -84,11 +84,12 @@ static int savedLineNo;  /* ditto */
 static TreeNode * savedTree; /* stores syntax tree for later return */
 static int savedNum;
 static int savedOp;
+static int savedLineNoParen;
 static int yylex(void); // added 11/2/11 to ensure no conflict with lex
 static int yyerror(char* s);
 
 
-#line 92 "y.tab.c"
+#line 93 "y.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -294,12 +295,13 @@ enum yysymbol_kind_t
   YYSYMBOL_65_5 = 65,                      /* @5  */
   YYSYMBOL_mulop = 66,                     /* mulop  */
   YYSYMBOL_factor = 67,                    /* factor  */
-  YYSYMBOL_call = 68,                      /* call  */
-  YYSYMBOL_69_6 = 69,                      /* @6  */
-  YYSYMBOL_args = 70,                      /* args  */
-  YYSYMBOL_arg_list = 71,                  /* arg_list  */
-  YYSYMBOL_selection_stmt = 72,            /* selection_stmt  */
-  YYSYMBOL_iteration_stmt = 73             /* iteration_stmt  */
+  YYSYMBOL_68_6 = 68,                      /* $@6  */
+  YYSYMBOL_call = 69,                      /* call  */
+  YYSYMBOL_70_7 = 70,                      /* @7  */
+  YYSYMBOL_args = 71,                      /* args  */
+  YYSYMBOL_arg_list = 72,                  /* arg_list  */
+  YYSYMBOL_selection_stmt = 73,            /* selection_stmt  */
+  YYSYMBOL_iteration_stmt = 74             /* iteration_stmt  */
 };
 typedef enum yysymbol_kind_t yysymbol_kind_t;
 
@@ -627,16 +629,16 @@ union yyalloc
 /* YYFINAL -- State number of the termination state.  */
 #define YYFINAL  9
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   98
+#define YYLAST   103
 
 /* YYNTOKENS -- Number of terminals.  */
 #define YYNTOKENS  36
 /* YYNNTS -- Number of nonterminals.  */
-#define YYNNTS  38
+#define YYNNTS  39
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  71
+#define YYNRULES  72
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  110
+#define YYNSTATES  111
 
 /* YYMAXUTOK -- Last valid token kind.  */
 #define YYMAXUTOK   290
@@ -689,14 +691,14 @@ static const yytype_int8 yytranslate[] =
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int16 yyrline[] =
 {
-       0,    54,    54,    56,    66,    69,    70,    72,    77,    85,
-      93,    92,   110,   111,   113,   113,   127,   128,   132,   142,
-     144,   150,   160,   167,   177,   180,   190,   193,   194,   195,
-     196,   197,   199,   200,   202,   206,   213,   220,   222,   223,
-     223,   233,   240,   242,   243,   244,   245,   246,   247,   249,
-     249,   258,   260,   261,   263,   263,   273,   276,   277,   279,
-     280,   281,   282,   289,   289,   297,   298,   300,   310,   313,
-     319,   327
+       0,    55,    55,    57,    67,    70,    71,    73,    78,    86,
+      94,    93,   111,   112,   114,   114,   128,   129,   133,   143,
+     145,   151,   161,   168,   178,   181,   191,   194,   195,   196,
+     197,   198,   200,   201,   203,   207,   214,   221,   223,   224,
+     224,   235,   243,   245,   246,   247,   248,   249,   250,   252,
+     252,   262,   264,   265,   267,   267,   278,   281,   282,   284,
+     284,   285,   286,   287,   295,   295,   304,   305,   307,   317,
+     320,   326,   334
 };
 #endif
 
@@ -723,7 +725,8 @@ static const char *const yytname[] =
   "statement_list", "statement", "expression_stmt", "return_stmt",
   "expression", "var", "@3", "simple_expression", "relop",
   "additive_expression", "@4", "addop", "term", "@5", "mulop", "factor",
-  "call", "@6", "args", "arg_list", "selection_stmt", "iteration_stmt", YY_NULLPTR
+  "$@6", "call", "@7", "args", "arg_list", "selection_stmt",
+  "iteration_stmt", YY_NULLPTR
 };
 
 static const char *
@@ -733,12 +736,12 @@ yysymbol_name (yysymbol_kind_t yysymbol)
 }
 #endif
 
-#define YYPACT_NINF (-85)
+#define YYPACT_NINF (-77)
 
 #define yypact_value_is_default(Yyn) \
   ((Yyn) == YYPACT_NINF)
 
-#define YYTABLE_NINF (-64)
+#define YYTABLE_NINF (-65)
 
 #define yytable_value_is_error(Yyn) \
   0
@@ -747,17 +750,18 @@ yysymbol_name (yysymbol_kind_t yysymbol)
    STATE-NUM.  */
 static const yytype_int8 yypact[] =
 {
-      -2,   -85,   -85,    13,    -2,   -85,   -85,    15,   -85,   -85,
-     -85,   -85,   -14,   -85,    25,    29,    53,    45,   -85,    46,
-      34,    15,    49,    26,   -85,    47,    50,    52,    -2,   -85,
-      48,   -85,   -85,   -85,   -85,    -2,   -85,    15,     4,    51,
-      58,    59,    11,    28,   -85,   -85,    22,   -85,   -85,   -85,
-     -85,   -85,    54,    55,   -85,    43,    32,   -85,   -85,   -85,
-     -85,    28,    28,   -85,    56,    60,   -85,    63,   -85,    28,
-     -85,   -85,   -85,   -85,   -85,   -85,   -85,   -85,    28,   -85,
-     -85,   -85,   -85,    64,    65,   -85,   -85,    28,    28,   -85,
-     -85,    36,    28,    28,    30,    30,    61,   -85,    66,    62,
-      32,   -85,    67,   -85,   -85,   -85,    28,    30,   -85,   -85
+      44,   -77,   -77,    11,    44,   -77,   -77,    14,   -77,   -77,
+     -77,   -77,   -16,   -77,    19,    28,    54,    56,   -77,    45,
+      31,    14,    48,    43,   -77,    46,    49,    51,    44,   -77,
+      53,   -77,   -77,   -77,   -77,    44,   -77,    14,    29,    52,
+      57,    59,    -2,   -77,   -77,   -77,    22,   -77,   -77,   -77,
+     -77,   -77,    55,    47,   -77,    42,    33,   -77,   -77,   -77,
+     -77,    27,    27,   -77,    58,    27,   -77,    60,   -77,    27,
+     -77,   -77,   -77,   -77,   -77,   -77,   -77,   -77,    27,   -77,
+     -77,   -77,   -77,    62,    64,   -77,    65,    27,    27,   -77,
+     -77,     4,    27,    27,     2,     2,   -77,    66,   -77,    67,
+      63,    33,   -77,    61,   -77,   -77,   -77,    27,     2,   -77,
+     -77
 };
 
 /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -769,22 +773,23 @@ static const yytype_int8 yydefact[] =
        3,     7,    10,     9,     0,     0,     0,     0,     8,     0,
       13,     0,     0,    16,    19,     0,    20,     0,     0,    11,
        0,    24,    15,    18,    21,    26,    23,     0,     0,    10,
-       0,     0,     0,     0,    22,    33,    38,    62,    28,    25,
-      27,    31,     0,    60,    37,    42,    51,    56,    61,    29,
+       0,     0,     0,    59,    22,    33,    38,    63,    28,    25,
+      27,    31,     0,    61,    37,    42,    51,    56,    62,    29,
       30,     0,     0,    34,     0,     0,    39,     0,    32,     0,
       48,    47,    44,    43,    45,    46,    52,    53,     0,    49,
-      57,    58,    54,     0,     0,    35,    59,     0,    66,    36,
-      60,    41,     0,     0,     0,     0,     0,    68,     0,    65,
-      50,    55,    69,    71,    40,    64,     0,     0,    67,    70
+      57,    58,    54,     0,     0,    35,     0,     0,    67,    36,
+      61,    41,     0,     0,     0,     0,    60,     0,    69,     0,
+      66,    50,    55,    70,    72,    40,    65,     0,     0,    68,
+      71
 };
 
 /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-     -85,   -85,   -85,    84,    -5,    75,    57,   -85,     8,   -85,
-     -85,   -85,   -85,    68,    71,   -85,   -85,   -84,   -85,   -85,
-     -42,   -75,   -85,   -85,   -85,    16,   -85,   -85,     1,   -85,
-     -85,     2,   -85,   -85,   -85,   -85,   -85,   -85
+     -77,   -77,   -77,    83,    -6,    76,    68,   -77,   -14,   -77,
+     -77,   -77,   -77,    69,    71,   -77,   -77,   -65,   -77,   -77,
+     -42,   -76,   -77,   -77,   -77,    15,   -77,   -77,     3,   -77,
+     -77,     1,   -77,   -77,   -77,   -77,   -77,   -77,   -77
 };
 
 /* YYDEFGOTO[NTERM-NUM].  */
@@ -793,7 +798,7 @@ static const yytype_int8 yydefgoto[] =
        0,     3,     4,     5,    46,    47,     6,    14,     7,     8,
       15,    22,    23,    24,    48,    35,    38,    49,    50,    51,
       52,    53,    87,    54,    78,    55,    92,    79,    56,    93,
-      82,    57,    58,    67,    98,    99,    59,    60
+      82,    57,    65,    58,    67,    99,   100,    59,    60
 };
 
 /* YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
@@ -801,30 +806,32 @@ static const yytype_int8 yydefgoto[] =
    number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_int8 yytable[] =
 {
-      64,    65,    12,    90,     1,     2,   -14,    40,    41,    42,
-     102,   103,    13,     9,    18,    11,    26,    90,    90,    83,
-      84,    18,    11,   109,    43,    21,    11,    89,    31,    44,
-      45,    43,    39,    40,    41,    42,    21,    63,    18,    11,
-      18,    11,   -63,    37,    66,    96,    97,    16,    43,    17,
-      43,     1,    20,    28,    31,   -17,    45,    70,    71,    72,
-      73,    74,    75,    18,   108,    80,    81,    76,    77,    25,
-      27,    34,    30,    29,    76,    77,    31,    13,    61,    62,
-      68,    86,    85,    88,   104,    94,    95,   105,    10,   106,
-      69,    19,    36,   100,    91,   101,    33,   107,    32
+      64,    12,    90,    21,   -14,    40,    41,    42,    18,    11,
+      13,     9,    18,    11,    21,    26,    90,    90,    43,    83,
+      84,    37,    43,    86,    63,    11,    31,    89,    45,   103,
+     104,    39,    40,    41,    42,    76,    77,    18,    11,    18,
+      11,    16,   -64,   110,    66,    97,    98,    43,    17,    43,
+       1,     2,   -17,    31,    44,    45,    70,    71,    72,    73,
+      74,    75,     1,    20,    18,   109,    80,    81,    25,    27,
+      28,    30,    29,    76,    77,    31,    34,    61,    13,    62,
+      88,    68,    69,    94,    85,    95,    96,    10,   106,   105,
+     107,   108,    19,    91,   102,   101,     0,    33,    32,     0,
+       0,     0,     0,    36
 };
 
 static const yytype_int8 yycheck[] =
 {
-      42,    43,     7,    78,     6,     7,    20,     3,     4,     5,
-      94,    95,    26,     0,    10,    11,    21,    92,    93,    61,
-      62,    10,    11,   107,    20,    17,    11,    69,    24,    25,
-      26,    20,    37,     3,     4,     5,    28,    26,    10,    11,
-      10,    11,    20,    35,    22,    87,    88,    22,    20,    20,
-      20,     6,     7,    27,    24,    21,    26,    14,    15,    16,
-      17,    18,    19,    10,   106,    33,    34,    31,    32,    23,
-      21,    23,    22,    26,    31,    32,    24,    26,    20,    20,
-      26,    21,    26,    20,    23,    21,    21,    21,     4,    27,
-      35,    16,    35,    92,    78,    93,    28,    30,    27
+      42,     7,    78,    17,    20,     3,     4,     5,    10,    11,
+      26,     0,    10,    11,    28,    21,    92,    93,    20,    61,
+      62,    35,    20,    65,    26,    11,    24,    69,    26,    94,
+      95,    37,     3,     4,     5,    31,    32,    10,    11,    10,
+      11,    22,    20,   108,    22,    87,    88,    20,    20,    20,
+       6,     7,    21,    24,    25,    26,    14,    15,    16,    17,
+      18,    19,     6,     7,    10,   107,    33,    34,    23,    21,
+      27,    22,    26,    31,    32,    24,    23,    20,    26,    20,
+      20,    26,    35,    21,    26,    21,    21,     4,    21,    23,
+      27,    30,    16,    78,    93,    92,    -1,    28,    27,    -1,
+      -1,    -1,    -1,    35
 };
 
 /* YYSTOS[STATE-NUM] -- The symbol kind of the accessing symbol of
@@ -836,12 +843,13 @@ static const yytype_int8 yystos[] =
        7,    44,    47,    48,    49,    23,    40,    21,    27,    26,
       22,    24,    50,    49,    23,    51,    42,    44,    52,    40,
        3,     4,     5,    20,    25,    26,    40,    41,    50,    53,
-      54,    55,    56,    57,    59,    61,    64,    67,    68,    72,
-      73,    20,    20,    26,    56,    56,    22,    69,    26,    35,
+      54,    55,    56,    57,    59,    61,    64,    67,    69,    73,
+      74,    20,    20,    26,    56,    68,    22,    70,    26,    35,
       14,    15,    16,    17,    18,    19,    31,    32,    60,    63,
-      33,    34,    66,    56,    56,    26,    21,    58,    20,    56,
-      57,    61,    62,    65,    21,    21,    56,    56,    70,    71,
-      64,    67,    53,    53,    23,    21,    27,    30,    56,    53
+      33,    34,    66,    56,    56,    26,    56,    58,    20,    56,
+      57,    61,    62,    65,    21,    21,    21,    56,    56,    71,
+      72,    64,    67,    53,    53,    23,    21,    27,    30,    56,
+      53
 };
 
 /* YYR1[RULE-NUM] -- Symbol kind of the left-hand side of rule RULE-NUM.  */
@@ -852,9 +860,9 @@ static const yytype_int8 yyr1[] =
       49,    49,    50,    51,    51,    52,    52,    53,    53,    53,
       53,    53,    54,    54,    55,    55,    56,    56,    57,    58,
       57,    59,    59,    60,    60,    60,    60,    60,    60,    62,
-      61,    61,    63,    63,    65,    64,    64,    66,    66,    67,
-      67,    67,    67,    69,    68,    70,    70,    71,    71,    72,
-      72,    73
+      61,    61,    63,    63,    65,    64,    64,    66,    66,    68,
+      67,    67,    67,    67,    70,    69,    71,    71,    72,    72,
+      73,    73,    74
 };
 
 /* YYR2[RULE-NUM] -- Number of symbols on the right-hand side of rule RULE-NUM.  */
@@ -865,9 +873,9 @@ static const yytype_int8 yyr2[] =
        2,     4,     4,     2,     0,     2,     0,     1,     1,     1,
        1,     1,     2,     1,     2,     3,     3,     1,     1,     0,
        5,     3,     1,     1,     1,     1,     1,     1,     1,     0,
-       4,     1,     1,     1,     0,     4,     1,     1,     1,     3,
-       1,     1,     1,     0,     5,     1,     0,     3,     1,     5,
-       7,     5
+       4,     1,     1,     1,     0,     4,     1,     1,     1,     0,
+       4,     1,     1,     1,     0,     5,     1,     0,     3,     1,
+       5,     7,     5
 };
 
 
@@ -1331,13 +1339,13 @@ yyreduce:
   switch (yyn)
     {
   case 2: /* program: declaration_list  */
-#line 54 "cminus.y"
+#line 55 "cminus.y"
                           { savedTree = yyvsp[0]; }
-#line 1337 "y.tab.c"
+#line 1345 "y.tab.c"
     break;
 
   case 3: /* declaration_list: declaration_list declaration  */
-#line 56 "cminus.y"
+#line 57 "cminus.y"
                                                 { 
                     YYSTYPE t = yyvsp[-1];
                      if (t != NULL) {
@@ -1348,38 +1356,38 @@ yyreduce:
                        yyval = yyvsp[0];
                      }
                    }
-#line 1352 "y.tab.c"
+#line 1360 "y.tab.c"
     break;
 
   case 4: /* declaration_list: declaration  */
-#line 66 "cminus.y"
+#line 67 "cminus.y"
                                { yyval = yyvsp[0]; }
-#line 1358 "y.tab.c"
+#line 1366 "y.tab.c"
     break;
 
   case 5: /* declaration: var_declaration  */
-#line 69 "cminus.y"
+#line 70 "cminus.y"
                              { yyval = yyvsp[0]; }
-#line 1364 "y.tab.c"
+#line 1372 "y.tab.c"
     break;
 
   case 6: /* declaration: func_declaration  */
-#line 70 "cminus.y"
+#line 71 "cminus.y"
                               { yyval = yyvsp[0]; }
-#line 1370 "y.tab.c"
+#line 1378 "y.tab.c"
     break;
 
   case 7: /* id: ID  */
-#line 72 "cminus.y"
+#line 73 "cminus.y"
        { 
        savedName = copyString(tokenString);
        savedLineNo = lineno;
      }
-#line 1379 "y.tab.c"
+#line 1387 "y.tab.c"
     break;
 
   case 8: /* num: NUM  */
-#line 77 "cminus.y"
+#line 78 "cminus.y"
          { 
     savedNum = atoi(copyString(tokenString));
     savedLineNo = lineno;
@@ -1387,31 +1395,31 @@ yyreduce:
     yyval->lineno=lineno;
     yyval->val=atoi(copyString(tokenString));
   }
-#line 1391 "y.tab.c"
+#line 1399 "y.tab.c"
     break;
 
   case 9: /* var_declaration: type_specifier id SEMI  */
-#line 86 "cminus.y"
+#line 87 "cminus.y"
                  {
                    yyval = newDecNode(VarDec);
                    yyval->lineno = savedLineNo; /* Use the saved line number */
                    yyval->name = copyString(savedName);
                    yyval->type = savedType;
                  }
-#line 1402 "y.tab.c"
+#line 1410 "y.tab.c"
     break;
 
   case 10: /* $@1: %empty  */
-#line 93 "cminus.y"
+#line 94 "cminus.y"
                  {
                    /* Capture the line number of the identifier */
                    savedLineNo = lineno;
                  }
-#line 1411 "y.tab.c"
+#line 1419 "y.tab.c"
     break;
 
   case 11: /* var_declaration: type_specifier id $@1 LBRACE num RBRACE SEMI  */
-#line 98 "cminus.y"
+#line 99 "cminus.y"
                  { 
                    yyval = newDecNode(ArrDec);
                    yyval->child[0] = yyvsp[-6];
@@ -1423,58 +1431,58 @@ yyreduce:
                    else
                      yyval->type = VoidArray;
                  }
-#line 1427 "y.tab.c"
+#line 1435 "y.tab.c"
     break;
 
   case 12: /* type_specifier: INT  */
-#line 110 "cminus.y"
+#line 111 "cminus.y"
                     { savedType=Integer; }
-#line 1433 "y.tab.c"
+#line 1441 "y.tab.c"
     break;
 
   case 13: /* type_specifier: VOID  */
-#line 111 "cminus.y"
+#line 112 "cminus.y"
                      { savedType=Void; }
-#line 1439 "y.tab.c"
+#line 1447 "y.tab.c"
     break;
 
   case 14: /* @2: %empty  */
-#line 113 "cminus.y"
+#line 114 "cminus.y"
                                      {
                    yyval = newDecNode(FuncDec);
                    yyval->lineno = lineno;
                    yyval->name = copyString(savedName);
                    yyval->type = savedType;
                  }
-#line 1450 "y.tab.c"
+#line 1458 "y.tab.c"
     break;
 
   case 15: /* func_declaration: type_specifier id @2 LPAREN params RPAREN compound_stmt  */
-#line 120 "cminus.y"
+#line 121 "cminus.y"
                  { yyval = yyvsp[-4];
                    yyval->child[0] = yyvsp[-6];
                    yyval->child[1] = yyvsp[-2];
                    yyval->child[2] = yyvsp[0];
                  }
-#line 1460 "y.tab.c"
+#line 1468 "y.tab.c"
     break;
 
   case 16: /* params: param_list  */
-#line 127 "cminus.y"
-                   { yyval = yyvsp[0]; }
-#line 1466 "y.tab.c"
-    break;
-
-  case 17: /* params: VOID  */
 #line 128 "cminus.y"
-             { yyval = newDecNode(ParamDec);
-           yyval->type = Void;
-         }
+                   { yyval = yyvsp[0]; }
 #line 1474 "y.tab.c"
     break;
 
+  case 17: /* params: VOID  */
+#line 129 "cminus.y"
+             { yyval = newDecNode(ParamDec);
+           yyval->type = Void;
+         }
+#line 1482 "y.tab.c"
+    break;
+
   case 18: /* param_list: param_list COMMA param  */
-#line 132 "cminus.y"
+#line 133 "cminus.y"
                                    { 
               YYSTYPE t = yyvsp[-2];
               if (t != NULL) {
@@ -1485,28 +1493,28 @@ yyreduce:
                 yyval = yyvsp[-1];
               }
             }
-#line 1489 "y.tab.c"
+#line 1497 "y.tab.c"
     break;
 
   case 19: /* param_list: param  */
-#line 142 "cminus.y"
+#line 143 "cminus.y"
                   { yyval = yyvsp[0]; }
-#line 1495 "y.tab.c"
+#line 1503 "y.tab.c"
     break;
 
   case 20: /* param: type_specifier id  */
-#line 144 "cminus.y"
+#line 145 "cminus.y"
                           { 
           yyval = newDecNode(ParamDec);
           yyval->child[0] = yyvsp[-1];
           yyval->type=savedType;
           yyval->name = copyString(savedName);
         }
-#line 1506 "y.tab.c"
+#line 1514 "y.tab.c"
     break;
 
   case 21: /* param: type_specifier id LBRACE RBRACE  */
-#line 150 "cminus.y"
+#line 151 "cminus.y"
                                         { 
           yyval = newDecNode(ArrParamDec);
           yyval->child[0] = yyvsp[-3];
@@ -1516,22 +1524,22 @@ yyreduce:
             yyval->type=VoidArray;
           yyval->name = copyString(savedName);
         }
-#line 1520 "y.tab.c"
+#line 1528 "y.tab.c"
     break;
 
   case 22: /* compound_stmt: LCURLY local_declarations statement_list RCURLY  */
-#line 160 "cminus.y"
+#line 161 "cminus.y"
                                                                { 
           yyval = newStmtNode(CompoundStmt);
           yyval->name = copyString("compound");
           yyval->child[0] = yyvsp[-2];
           yyval->child[1] = yyvsp[-1];
       }
-#line 1531 "y.tab.c"
+#line 1539 "y.tab.c"
     break;
 
   case 23: /* local_declarations: local_declarations var_declaration  */
-#line 167 "cminus.y"
+#line 168 "cminus.y"
                                                       { 
                       YYSTYPE t = yyvsp[-1];
                        if (t != NULL) {
@@ -1542,17 +1550,17 @@ yyreduce:
                          yyval = yyvsp[0];
                        }
                      }
-#line 1546 "y.tab.c"
+#line 1554 "y.tab.c"
     break;
 
   case 24: /* local_declarations: %empty  */
-#line 177 "cminus.y"
+#line 178 "cminus.y"
                      { yyval = NULL; }
-#line 1552 "y.tab.c"
+#line 1560 "y.tab.c"
     break;
 
   case 25: /* statement_list: statement_list statement  */
-#line 180 "cminus.y"
+#line 181 "cminus.y"
                                           { 
                    YYSTYPE t = yyvsp[-1];
                    if (t != NULL) {
@@ -1563,310 +1571,322 @@ yyreduce:
                      yyval = yyvsp[0];
                    }
                  }
-#line 1567 "y.tab.c"
+#line 1575 "y.tab.c"
     break;
 
   case 26: /* statement_list: %empty  */
-#line 190 "cminus.y"
+#line 191 "cminus.y"
                  { yyval = NULL; }
-#line 1573 "y.tab.c"
+#line 1581 "y.tab.c"
     break;
 
   case 27: /* statement: expression_stmt  */
-#line 193 "cminus.y"
+#line 194 "cminus.y"
                            { yyval = yyvsp[0]; savedLineNo = lineno; }
-#line 1579 "y.tab.c"
+#line 1587 "y.tab.c"
     break;
 
   case 28: /* statement: compound_stmt  */
-#line 194 "cminus.y"
+#line 195 "cminus.y"
                          { yyval = yyvsp[0]; savedLineNo = lineno; }
-#line 1585 "y.tab.c"
+#line 1593 "y.tab.c"
     break;
 
   case 29: /* statement: selection_stmt  */
-#line 195 "cminus.y"
+#line 196 "cminus.y"
                           { yyval = yyvsp[0]; savedLineNo = lineno; }
-#line 1591 "y.tab.c"
+#line 1599 "y.tab.c"
     break;
 
   case 30: /* statement: iteration_stmt  */
-#line 196 "cminus.y"
+#line 197 "cminus.y"
                           { yyval = yyvsp[0]; savedLineNo = lineno; }
-#line 1597 "y.tab.c"
+#line 1605 "y.tab.c"
     break;
 
   case 31: /* statement: return_stmt  */
-#line 197 "cminus.y"
+#line 198 "cminus.y"
                        { yyval = yyvsp[0]; savedLineNo = lineno; }
-#line 1603 "y.tab.c"
+#line 1611 "y.tab.c"
     break;
 
   case 32: /* expression_stmt: expression SEMI  */
-#line 199 "cminus.y"
-                                 { yyval = yyvsp[-1]; }
-#line 1609 "y.tab.c"
+#line 200 "cminus.y"
+                                 { yyval = yyvsp[-1]; yyval->lineno = yyvsp[-1]->lineno; }
+#line 1617 "y.tab.c"
     break;
 
   case 33: /* expression_stmt: SEMI  */
-#line 200 "cminus.y"
+#line 201 "cminus.y"
                       { yyval = 0; }
-#line 1615 "y.tab.c"
+#line 1623 "y.tab.c"
     break;
 
   case 34: /* return_stmt: RETURN SEMI  */
-#line 202 "cminus.y"
+#line 203 "cminus.y"
                          { 
               yyval = newStmtNode(ReturnStmt);
               yyval->type=Void;
             }
-#line 1624 "y.tab.c"
+#line 1632 "y.tab.c"
     break;
 
   case 35: /* return_stmt: RETURN expression SEMI  */
-#line 206 "cminus.y"
+#line 207 "cminus.y"
                                     { 
              yyval = newStmtNode(ReturnStmt);
              yyval->type = Integer;
              yyval->child[0] = yyvsp[-1];
              yyval->name = copyString("return");
             }
-#line 1635 "y.tab.c"
+#line 1643 "y.tab.c"
     break;
 
   case 36: /* expression: var ASSIGN expression  */
-#line 213 "cminus.y"
+#line 214 "cminus.y"
                                   { 
             yyval = newExprNode(AssignExpr);
             yyval->child[0] = yyvsp[-2];
             yyval->child[1] = yyvsp[0];
             yyval->name = copyString("expression");
-            yyval->lineno = savedLineNo;
+            yyval->lineno = yyvsp[-2]->lineno;
           }
-#line 1647 "y.tab.c"
+#line 1655 "y.tab.c"
     break;
 
   case 37: /* expression: simple_expression  */
-#line 220 "cminus.y"
-                              { yyval = yyvsp[0]; }
-#line 1653 "y.tab.c"
+#line 221 "cminus.y"
+                              { yyval = yyvsp[0]; yyval->lineno = yyvsp[0]->lineno;}
+#line 1661 "y.tab.c"
     break;
 
   case 38: /* var: id  */
-#line 222 "cminus.y"
-        { yyval = newExprNode(IdExpr); yyval->name=copyString(savedName); yyval->type=savedType; }
-#line 1659 "y.tab.c"
+#line 223 "cminus.y"
+        { yyval = newExprNode(IdExpr); yyval->name=copyString(savedName); yyval->type=savedType; yyval->lineno = savedLineNo; }
+#line 1667 "y.tab.c"
     break;
 
   case 39: /* @3: %empty  */
-#line 223 "cminus.y"
+#line 224 "cminus.y"
                {
       yyval = newExprNode(IdExpr);
       yyval->name=copyString(savedName); 
       yyval->type=Integer;
-    }
-#line 1669 "y.tab.c"
-    break;
-
-  case 40: /* var: id LBRACE @3 expression RBRACE  */
-#line 228 "cminus.y"
-                      { 
-      yyval = yyvsp[-2];
-      yyval->child[0] = yyvsp[-1];
+      yyval->lineno = savedLineNo;
     }
 #line 1678 "y.tab.c"
     break;
 
+  case 40: /* var: id LBRACE @3 expression RBRACE  */
+#line 230 "cminus.y"
+                      { 
+      yyval = yyvsp[-2];
+      yyval->child[0] = yyvsp[-1];
+    }
+#line 1687 "y.tab.c"
+    break;
+
   case 41: /* simple_expression: additive_expression relop additive_expression  */
-#line 233 "cminus.y"
+#line 235 "cminus.y"
                                                                  { 
                      yyval = newExprNode(OpExpr);
                      yyval->child[0] = yyvsp[-2];
                      yyval->child[1] = yyvsp[0];
                      yyval->op = savedOp;
                      yyval->name = copyString("simple_expression");
+                     yyval->lineno = yyvsp[-2]->lineno;
                    }
-#line 1690 "y.tab.c"
+#line 1700 "y.tab.c"
     break;
 
   case 42: /* simple_expression: additive_expression  */
-#line 240 "cminus.y"
-                                       { yyval = yyvsp[0]; }
-#line 1696 "y.tab.c"
+#line 243 "cminus.y"
+                                       { yyval = yyvsp[0]; yyval->lineno = yyvsp[0]->lineno; }
+#line 1706 "y.tab.c"
     break;
 
   case 43: /* relop: LE  */
-#line 242 "cminus.y"
+#line 245 "cminus.y"
           { savedOp = LE; }
-#line 1702 "y.tab.c"
+#line 1712 "y.tab.c"
     break;
 
   case 44: /* relop: LT  */
-#line 243 "cminus.y"
+#line 246 "cminus.y"
           { savedOp = LT; }
-#line 1708 "y.tab.c"
+#line 1718 "y.tab.c"
     break;
 
   case 45: /* relop: GT  */
-#line 244 "cminus.y"
+#line 247 "cminus.y"
           { savedOp = GT; }
-#line 1714 "y.tab.c"
+#line 1724 "y.tab.c"
     break;
 
   case 46: /* relop: GE  */
-#line 245 "cminus.y"
+#line 248 "cminus.y"
           { savedOp = GE; }
-#line 1720 "y.tab.c"
+#line 1730 "y.tab.c"
     break;
 
   case 47: /* relop: NE  */
-#line 246 "cminus.y"
+#line 249 "cminus.y"
           { savedOp = NE; }
-#line 1726 "y.tab.c"
+#line 1736 "y.tab.c"
     break;
 
   case 48: /* relop: EQ  */
-#line 247 "cminus.y"
+#line 250 "cminus.y"
           { savedOp = EQ; }
-#line 1732 "y.tab.c"
+#line 1742 "y.tab.c"
     break;
 
   case 49: /* @4: %empty  */
-#line 249 "cminus.y"
+#line 252 "cminus.y"
                                                {
                         yyval = newExprNode(OpExpr);
                         yyval->name = copyString("additive_expression");
                         yyval->op=savedOp;
+                        yyval->lineno=yyvsp[-1]->lineno;
                     }
-#line 1742 "y.tab.c"
+#line 1753 "y.tab.c"
     break;
 
   case 50: /* additive_expression: additive_expression addop @4 term  */
-#line 253 "cminus.y"
+#line 257 "cminus.y"
                            { 
                          yyval = yyvsp[-1];
                          yyval -> child[0] = yyvsp[-3];
                          yyval -> child[1] = yyvsp[0];
                     }
-#line 1752 "y.tab.c"
+#line 1763 "y.tab.c"
     break;
 
   case 51: /* additive_expression: term  */
-#line 258 "cminus.y"
-                          { yyval = yyvsp[0]; }
-#line 1758 "y.tab.c"
+#line 262 "cminus.y"
+                          { yyval = yyvsp[0]; yyval->lineno = yyvsp[0]->lineno; }
+#line 1769 "y.tab.c"
     break;
 
   case 52: /* addop: PLUS  */
-#line 260 "cminus.y"
+#line 264 "cminus.y"
             { savedOp = PLUS; }
-#line 1764 "y.tab.c"
+#line 1775 "y.tab.c"
     break;
 
   case 53: /* addop: MINUS  */
-#line 261 "cminus.y"
+#line 265 "cminus.y"
              { savedOp = MINUS; }
-#line 1770 "y.tab.c"
+#line 1781 "y.tab.c"
     break;
 
   case 54: /* @5: %empty  */
-#line 263 "cminus.y"
+#line 267 "cminus.y"
                  {
 yyval=newExprNode(OpExpr);
-yyval->op=savedOp;  
+yyval->op=savedOp; 
+yyval->lineno=yyvsp[-1]->lineno;
 }
-#line 1779 "y.tab.c"
+#line 1791 "y.tab.c"
     break;
 
   case 55: /* term: term mulop @5 factor  */
-#line 267 "cminus.y"
+#line 272 "cminus.y"
        { 
   yyval = yyvsp[-1];
   yyval->child[0]=yyvsp[-3]; 
   yyval->child[1]=yyvsp[0]; 
   
   }
-#line 1790 "y.tab.c"
-    break;
-
-  case 56: /* term: factor  */
-#line 273 "cminus.y"
-             { yyval = yyvsp[0]; }
-#line 1796 "y.tab.c"
-    break;
-
-  case 57: /* mulop: TIMES  */
-#line 276 "cminus.y"
-             { savedOp = TIMES; }
 #line 1802 "y.tab.c"
     break;
 
-  case 58: /* mulop: OVER  */
-#line 277 "cminus.y"
-            { savedOp = OVER; }
+  case 56: /* term: factor  */
+#line 278 "cminus.y"
+             { yyval = yyvsp[0]; yyval->lineno = yyvsp[0]->lineno; }
 #line 1808 "y.tab.c"
     break;
 
-  case 59: /* factor: LPAREN expression RPAREN  */
-#line 279 "cminus.y"
-                                 { yyval = yyvsp[-1]; }
+  case 57: /* mulop: TIMES  */
+#line 281 "cminus.y"
+             { savedOp = TIMES; }
 #line 1814 "y.tab.c"
     break;
 
-  case 60: /* factor: var  */
-#line 280 "cminus.y"
-            { yyval = yyvsp[0]; }
+  case 58: /* mulop: OVER  */
+#line 282 "cminus.y"
+            { savedOp = OVER; }
 #line 1820 "y.tab.c"
     break;
 
-  case 61: /* factor: call  */
-#line 281 "cminus.y"
-             { yyval = yyvsp[0]; }
+  case 59: /* $@6: %empty  */
+#line 284 "cminus.y"
+               { savedLineNoParen = lineno; }
 #line 1826 "y.tab.c"
     break;
 
-  case 62: /* factor: num  */
-#line 282 "cminus.y"
+  case 60: /* factor: LPAREN $@6 expression RPAREN  */
+#line 284 "cminus.y"
+                                                                { yyval = yyvsp[-1]; yyval->lineno = savedLineNoParen; }
+#line 1832 "y.tab.c"
+    break;
+
+  case 61: /* factor: var  */
+#line 285 "cminus.y"
+            { yyval = yyvsp[0]; yyval->lineno = yyvsp[0]->lineno;}
+#line 1838 "y.tab.c"
+    break;
+
+  case 62: /* factor: call  */
+#line 286 "cminus.y"
+             { yyval = yyvsp[0]; yyval->lineno = yyvsp[0]->lineno; }
+#line 1844 "y.tab.c"
+    break;
+
+  case 63: /* factor: num  */
+#line 287 "cminus.y"
             { 
            yyval = newExprNode(ConstExpr);
            yyval->type = Integer;
            yyval->val = atoi(copyString(tokenString));
+           yyval->lineno = yyvsp[0]->lineno;
          }
-#line 1836 "y.tab.c"
+#line 1855 "y.tab.c"
     break;
 
-  case 63: /* @6: %empty  */
-#line 289 "cminus.y"
+  case 64: /* @7: %empty  */
+#line 295 "cminus.y"
          {
   yyval = newExprNode(CallExpr);
   yyval->name = copyString(savedName);
+  yyval->lineno = lineno;
 }
-#line 1845 "y.tab.c"
+#line 1865 "y.tab.c"
     break;
 
-  case 64: /* call: id @6 LPAREN args RPAREN  */
-#line 292 "cminus.y"
+  case 65: /* call: id @7 LPAREN args RPAREN  */
+#line 299 "cminus.y"
                      { 
   yyval = yyvsp[-3];
   yyval->child[0] = yyvsp[-1];
 }
-#line 1854 "y.tab.c"
+#line 1874 "y.tab.c"
     break;
 
-  case 65: /* args: arg_list  */
-#line 297 "cminus.y"
+  case 66: /* args: arg_list  */
+#line 304 "cminus.y"
                { yyval=yyvsp[0]; }
-#line 1860 "y.tab.c"
+#line 1880 "y.tab.c"
     break;
 
-  case 66: /* args: %empty  */
-#line 298 "cminus.y"
+  case 67: /* args: %empty  */
+#line 305 "cminus.y"
       { yyval = NULL; }
-#line 1866 "y.tab.c"
+#line 1886 "y.tab.c"
     break;
 
-  case 67: /* arg_list: arg_list COMMA expression  */
-#line 300 "cminus.y"
+  case 68: /* arg_list: arg_list COMMA expression  */
+#line 307 "cminus.y"
                                     { 
    YYSTYPE t = yyvsp[-2];
              if (t != NULL) {
@@ -1877,28 +1897,28 @@ yyval->op=savedOp;
                yyval = yyvsp[0];
              }
 }
-#line 1881 "y.tab.c"
+#line 1901 "y.tab.c"
     break;
 
-  case 68: /* arg_list: expression  */
-#line 310 "cminus.y"
+  case 69: /* arg_list: expression  */
+#line 317 "cminus.y"
                      {yyval = yyvsp[0];}
-#line 1887 "y.tab.c"
+#line 1907 "y.tab.c"
     break;
 
-  case 69: /* selection_stmt: IF LPAREN expression RPAREN statement  */
-#line 313 "cminus.y"
+  case 70: /* selection_stmt: IF LPAREN expression RPAREN statement  */
+#line 320 "cminus.y"
                                                       { 
                   yyval = newStmtNode(IfStmt);
                   yyval->child[0] = yyvsp[-2];
                   yyval->child[1] = yyvsp[0];
                   yyval->lineno = savedLineNo;
                 }
-#line 1898 "y.tab.c"
+#line 1918 "y.tab.c"
     break;
 
-  case 70: /* selection_stmt: IF LPAREN expression RPAREN statement ELSE statement  */
-#line 319 "cminus.y"
+  case 71: /* selection_stmt: IF LPAREN expression RPAREN statement ELSE statement  */
+#line 326 "cminus.y"
                                                                      { 
                   yyval = newStmtNode(IfElseStmt);
                   yyval->child[0] = yyvsp[-4];
@@ -1906,22 +1926,22 @@ yyval->op=savedOp;
                   yyval->child[2] = yyvsp[0];
                   yyval->lineno = savedLineNo;
                 }
-#line 1910 "y.tab.c"
+#line 1930 "y.tab.c"
     break;
 
-  case 71: /* iteration_stmt: WHILE LPAREN expression RPAREN statement  */
-#line 327 "cminus.y"
+  case 72: /* iteration_stmt: WHILE LPAREN expression RPAREN statement  */
+#line 334 "cminus.y"
                                                          { 
                   yyval = newStmtNode(WhileStmt);
                   yyval->child[0] = yyvsp[-2];
                   yyval->child[1] = yyvsp[0];
                   yyval->lineno = savedLineNo;
                 }
-#line 1921 "y.tab.c"
+#line 1941 "y.tab.c"
     break;
 
 
-#line 1925 "y.tab.c"
+#line 1945 "y.tab.c"
 
       default: break;
     }
@@ -2114,7 +2134,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 334 "cminus.y"
+#line 341 "cminus.y"
 
 
 
