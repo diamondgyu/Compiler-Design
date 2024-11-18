@@ -1,7 +1,7 @@
 /* A program to perform Euclid's
    Algorithm to computer gcd */
 
-int gcd (int u, int v)
+int gcd (int u, int v, int w, int x[])
 {
 	if (v == 0) return u;
 	else return gcd(v,u-u/v*v);
@@ -12,39 +12,12 @@ int gcd (int u, int v)
 
 void main(void)
 {
-	int x[3];
-	int y[4];
-	int z;
+	int a;
+	int b;
+	int c;
+	int d[3];
+	int e;
 
-
-	if(z==3) z+3;
-	else z+2;
-
-	if(z+3) z+3
-	
-	;
-
-	while(z+
-	3) { z+3; z+
-	4;
-	
-	
-	}
-
-
-	V()
-	;
-
-	x
-	-
-	y
-	;
-
-	y = 
-	x
-	+
-	z
-	;
+	e = gcd(a, b, c, d);
 }
 
-void V(void) {}

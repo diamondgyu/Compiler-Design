@@ -126,6 +126,7 @@ int add_new_symbol(Scope scope, TreeNode* node, int loc)
   
   // sym->type = node->type;
   sym->scope = scope;
+  sym->node = node;
 
   LineList line = (LineList)calloc(1, sizeof(struct LineListRec));
   line->lineno = node->lineno;
@@ -163,7 +164,6 @@ Scope st_insert(Scope current_scope, TreeNode* node, int loc)
    // when root node is null, init the root node and add two functions at lineno 0
    if (scopeTree == NULL) {
       scopeTree = insert_scope("global", NULL);
-      // printf("Global scope created\n");
       current_scope = scopeTree;
 
       TreeNode* inputftn_node = (TreeNode*)calloc(1, sizeof(TreeNode));
@@ -179,6 +179,15 @@ Scope st_insert(Scope current_scope, TreeNode* node, int loc)
       outputftn_node->node_type = Dec;
       outputftn_node->dec_type = FuncDec;
       outputftn_node->type = Void;
+
+      TreeNode* out_param = (TreeNode*)calloc(1, sizeof(TreeNode));
+      out_param->lineno = 0;
+      out_param->name = copyString("value");
+      out_param->node_type = Dec;
+      out_param->dec_type = ParamDec;
+      out_param->type = Integer;
+      
+      outputftn_node->child[1] = out_param;
 
       add_new_symbol(current_scope, inputftn_node, 0);
       add_new_symbol(current_scope, outputftn_node, 0);

@@ -231,9 +231,44 @@ static void checkNode(TreeNode * t, Scope scope)
       //fprintf(listing, "Error: Invalid function call at line %d (name : \"%s\")\n", t->lineno, t->name);
       // check if the function call is valid
       //1. bring the parameter nodes of the function
-      TreeNode* function = check
+      printf("%s  %s\n", t->name, scope_copy->name);
+      Scope function_scope = check_scope(scope_copy, t->name);
+      TreeNode* function = function_scope->symbols[0]->node;
+      for(int i = 0; strcmp(function_scope->symbols[i]->name, t->name) != 0; i++) function = function_scope->symbols[i+1]->node;
+      
+      TreeNode* params = function->child[1];
+      TreeNode* args = t->child[0];
+
+      // check all param type iteratively
+      while(params != NULL && args != NULL)
+      {
+        printf("%d %d\n", params->type, args->type);
+        if ((params->type == args->type) 
+        || (params->type == IntegerWasArray && args->type == Integer) 
+        || (params->type == Integer && args->type == IntegerWasArray))
+        {
+          
+        }
+        else
+        {
+          fprintf(listing, "Error: Invalid function call at line %d (name : \"%s\")\n", t->lineno, t->name);
+          t->type = Undeclared;
+          break;
+        }
+        params = params->sibling;
+        args = args->sibling;
+      }
+
+      if (params != NULL || args != NULL)
+      {
+        fprintf(listing, "Error: Invalid function call at line %d (name : \"%s\")\n", t->lineno, t->name);
+        t->type = Undeclared;
+        break;
+      }
+
       //2. check if the parameter nodes are valid
       //3. check if the return type of the function is valid
+        t->type = function->type;
         break;
       case TypeExpr:
         break;
@@ -273,7 +308,7 @@ static void checkNode(TreeNode * t, Scope scope)
           t->type = Integer;
         
         // invalid array indexing: indexing of int
-        printf("%s, %ld, %d\n", t->name, t->child[0], t->type);
+        // printf("%s, %ld, %d\n", t->name, t->child[0], t->type);
         if (t->child[0] != NULL && t->type == Integer)
           fprintf(listing, "Error: Invalid array indexing at line %d (name : \"%s\"). indexing can only allowed for int[] variables\n", t->lineno, t->name);
 
