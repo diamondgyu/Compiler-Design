@@ -20,6 +20,7 @@ static int savedLineNo;  /* ditto */
 static TreeNode * savedTree; /* stores syntax tree for later return */
 static int savedNum;
 static int savedOp;
+static int savedCmpOp;
 static int savedLineNoParen;
 static int yylex(void); // added 11/2/11 to ensure no conflict with lex
 static int yyerror(char* s);
@@ -236,18 +237,18 @@ simple_expression: additive_expression relop additive_expression {
                      $$ = newExprNode(OpExpr);
                      $$->child[0] = $1;
                      $$->child[1] = $3;
-                     $$->op = savedOp;
+                     $$->op = savedCmpOp;
                      $$->name = copyString("simple_expression");
                      $$->lineno = $1->lineno;
                    }
                  | additive_expression { $$ = $1; $$->lineno = $1->lineno; };
 
-relop: LE { savedOp = LE; } 
-     | LT { savedOp = LT; } 
-     | GT { savedOp = GT; } 
-     | GE { savedOp = GE; } 
-     | NE { savedOp = NE; }
-     | EQ { savedOp = EQ; };
+relop: LE { savedCmpOp = LE; } 
+     | LT { savedCmpOp = LT; } 
+     | GT { savedCmpOp = GT; } 
+     | GE { savedCmpOp = GE; } 
+     | NE { savedCmpOp = NE; }
+     | EQ { savedCmpOp = EQ; };
 
 additive_expression: additive_expression addop {
                         $$ = newExprNode(OpExpr);

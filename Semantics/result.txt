@@ -2,25 +2,30 @@
 C-MINUS COMPILATION: ./test_1_.cm
 
 Building Symbol Table...
-Error: undeclared variable "t" is used at line 12
+Error: undeclared variable "t" is used at line 23
 
 Symbol table:
 
 Symbol Table:
 Name      	Kind      	Type      	ScopeName 	Location  	Line Numbers
 ----------	----------	----------	----------	----------	------------
-input     	Function  	Integer   	global    	0         	0 
-output    	Function  	Void      	global    	0         	0 
-main      	Function  	Integer   	global    	0         	1 
-x         	Variable  	Integer   	main      	2         	3 8 12 
-y         	Variable  	Integer[] 	main      	3         	4 9 
-z         	Variable  	Integer   	main      	4         	5 7 
-t         	Variable  	undeclared	main      	5         	12 
+input     	Function  	Integer   	global    	0         	0 16 
+output    	Function  	Void      	global    	0         	0 26 
+gcd       	Function  	Integer   	global    	0         	1 4 26 
+main      	Function  	Integer   	global    	3         	10 
+u         	Variable  	Integer   	gcd       	1         	1 3 4 4 
+v         	Variable  	Integer   	gcd       	2         	1 3 4 4 4 
+x         	Variable  	Integer   	main      	5         	12 16 19 23 26 28 31 
+y         	Variable  	Integer[] 	main      	6         	13 20 26 31 31 31 
+z         	Variable  	Integer   	main      	7         	14 18 28 31 
+t         	Variable  	undeclared	main      	8         	23 
 
 Checking Types...
-Error: invalid operation at line 7
-Error: invalid operation at line 11
-Error: invalid operation at line 7
-Error: invalid assignment at line 7
+Error: Invalid return at line 7
+Error: invalid operation at line 18
+Error: invalid operation at line 22
+Error: invalid operation at line 18
+Error: invalid assignment at line 18
+Error: invalid condition at line 29
 
 Type Checking Finished

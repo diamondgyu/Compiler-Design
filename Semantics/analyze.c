@@ -287,7 +287,6 @@ static void checkNode(TreeNode * t, Scope scope)
           t->type = Undeclared;
           break;
         }
-        
         if ((t->op == EQ) || (t->op == LT) || (t->op == GT) || (t->op == LE) || (t->op == GE) || (t->op == NE))
           t->type = Bool;
           // t->type = Boolean;
